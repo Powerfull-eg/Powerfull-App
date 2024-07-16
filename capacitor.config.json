@@ -1,0 +1,10 @@
+{
+  "appId": "com.powerfull.app",
+  "appName": "Powerfull",
+  "bundledWebRuntime": false,
+  "webDir": "dist",
+  "npmClient": "npm",
+  "cordova": {},
+  "plugins": {
+  }
+}

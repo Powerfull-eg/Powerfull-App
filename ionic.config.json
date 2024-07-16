@@ -1,0 +1,8 @@
+{
+  "name": "app-powerfull",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "xxx"
+}

@@ -1,0 +1,772 @@
+<template>
+  <base-layout hideHeader hideMenuBtn map>
+    <div class="d-flex h-100 bg-white flex-column">
+      <div class="w-100 d-flex flex-column justify-content-evenly text-center upper-part"
+        style="height: 40%; border-radius: 0px 0px 30% 0px ; background-color:  var(--main-color-light);">
+        <div class="phone-logo-con">
+          <img class="phone-logo" src="assets/images/white-logo.svg" alt="logo">
+
+        </div>
+        <span class="font-weight-bold" style="font-size: 2rem;">{{t('Welcome!')}}</span>
+
+      </div>
+      <div class="w-100 h-50 d-flex" style="background-color: var(--main-color-light);">
+        <div class="bg-white w-100 h-100 text-dark lower-part">
+          <div class="form-container text-center  d-flex flex-column "
+            :style="(otpSent && otpVerified && !userExist ? 'margin-top: unset' : '')">
+            <form v-if="!otpSent" id="phone-form" @submit.prevent="submitPhone()">
+              <div class="form-inputs fs-6 d-flex flex-column">
+                <span class=" my-2 text-main-color font-weight-bold">{{ t('phone.Enter your phone number')}}</span>
+                <ion-input name="phone" required v-model="emailphone" autocomplete label-placement="floating"
+                  type="number" :placeholder="t('phone.Phone Number')"></ion-input>
+
+                <div class="form-submit">
+                  <button type="submit">{{t('Confirm')}}</button>
+                </div>
+                <!-- <div class="icons justify-content-center d-flex flex-row w-100">
+              <img src="assets/icons/facebook.png" alt="">
+              <img src="assets/icons/google.png" alt="">
+              <img src="assets/icons/twitter.png" alt="">
+            </div> -->
+                <div class="text-">
+                  <router-link to="/guest" class="m-3 text-main-color text-decoration-none font-weight-bold">
+                    {{ t("phone.Continue as guest") }} >
+                  </router-link>
+                </div>
+              </div>
+            </form>
+            <form v-else-if="otpSent && !otpVerified" style="margin-bottom: 2rem;" id="otp" @submit.prevent="verifyOtp()">
+              <div style="padding-top: 50px;" class="form-inputs fs-6 d-flex flex-column">
+                <span class="m-2">{{ t("phone.Enter your otp number that we sent to your phone")}}</span>
+                <ion-input name="otp" v-model="otp" autocomplete label-placement="floating" type="number"
+                  placeholder="OTP"></ion-input>
+                <span id="counter" class="text text-danger text-center mb-3"></span>
+                <span v-if="otpStatus != 0" :class="'otp-status text text-' + (otpStatus === 1 ? 'success' : 'danger')">{{
+                  otpStatus === 1 ? t("phone.OTP is correct") : t("phone.OTP is not correct, please try again") }}</span>
+                <span class="d-block">{{ t("phone.didnt get code?") }} <a class="text-primary text-decoration-none"
+                    @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a></span>
+                <a class="m-3 text-decoration-none" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
+                <div class="form-submit">
+                  <button type="submit">{{ t("Confirm")}}</button>
+                </div>
+              </div>
+            </form>
+            <form v-else-if="otpSent && otpVerified && userExist && !resetPassword" id="old-user"
+              @submit.prevent="loginUser()">
+              <div class="form-inputs d-flex flex-column">
+                <span class="fs-5 my-2" style="color:var(--color);font-weight: 600;">{{ t("Welcome!")}} {{ userName }}</span>
+                <span class="fs-6 my-2">{{ t("phone.Enter your Password to login")}}</span>
+                <ion-input name="password" required v-model="password" autocomplete label-placement="floating"
+                  type="password" placeholder="Password"></ion-input>
+                <span><a class="text-primary text-decoration-none" @click.prevent="resetUserPassword()">{{ t('phone.Forget Password ?')}}</a></span>
+                <div class="form-submit">
+                  <button type="submit">{{ t("Confirm")}}</button>
+                </div>
+              </div>
+            </form>
+            <!-- <NewUser v-else-if="otpSent && otpVerified && !userExist" :phone="phone"/> -->
+            <form id="new-user" v-else-if="otpSent && otpVerified && !userExist && !resetPassword" class="w-75"
+              @submit.prevent="register()">
+              <div class="form-inputs d-flex flex-column">
+                <br>
+                <span class="fs-6 my-2">{{ t('phone.Complete Your Account')}}</span>
+                <div class="row">
+                  <ion-input class="col me-3" name="fname" required v-model="fname" autocomplete
+                    label-placement="floating" type="text" :placeholder="t('profile.First Name')"></ion-input>
+                  <ion-input class="col" name="lname" required v-model="lname" autocomplete label-placement="floating"
+                    type="text" :placeholder="t('profile.Last Name')"></ion-input>
+                </div>
+
+                <ion-input name="email" v-model="email" required autocomplete label-placement="floating" type="text"
+                  :placeholder="t('profile.Email')"></ion-input>
+
+                <div class="row">
+                  <ion-input class="col me-3" name="password" required v-model="password" autocomplete
+                    label-placement="floating" type="Password" :placeholder="t('profile.Password')"></ion-input>
+                  <ion-input class="col" name="confirm" required v-model="confirm" autocomplete label-placement="floating"
+                    type="Password" :placeholder="t('profile.Confirm Password')"></ion-input>
+                </div>
+                <div class="row my-3">
+                  <div class="form-check form-switch">
+                    <input required class="form-check-input" type="checkbox" role="switch" id="terms" name="terms" v-model="terms">
+                    <label class="form-check-label" for="terms" style="font-size: 1rem;display: block; width: fit-content; line-height: 2rem;">{{t('Do you accept')}} <router-link to="/terms">{{t('Terms & Conditions')}}</router-link></label>
+                  </div>
+                </div>
+                <div class="form-submit">
+                  <button type="submit">{{ t("Confirm")}}</button>
+                </div>
+              </div>
+            </form>
+            <!-- Reset Password Form -->
+            <form v-else-if="otpSent && otpVerified && userExist && resetPassword" id="reset-password"
+              @submit.prevent="submitResetPassword()">
+              <div class="form-inputs d-flex flex-column">
+                <span class="fs-5 my-2" style="color:var(--color);font-weight: 600;">{{t("Welcome!")}} {{ userName }}</span>
+                <span class="fs-6 my-2">{{ t('phone.Enter your new Password')}}</span>
+                <ion-input class="col me-3" name="password" required v-model="password" autocomplete
+                  label-placement="floating" type="Password" :placeholder="t('profile.Password')"></ion-input>
+                <ion-input class="col" name="confirm" required v-model="confirm" autocomplete label-placement="floating"
+                  type="Password" :placeholder="t('profile.Confirm Password')"></ion-input>
+                <div class="form-submit">
+                  <button type="submit">{{ t("Confirm")}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="offcanvas offcanvas-bottom" :is-open="modalOpen" tabindex="-1" id="offcanvasPhone"
+      aria-labelledby="offcanvasBottomLabel">
+      <div class="offcanvas-header fs-3">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">{{ modalData.header }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body small">
+        <div v-if="modalData.loader" class="spinner-border" role="status"></div>
+        <span v-if="modalData.loader" class="text-center d-block my-3">{{t("Loading")}}...</span>
+        <div v-else>
+          <img :src="modalData.body.img" alt="" width='50' class='d-block mx-auto mb-3'>
+          <span class='d-block mx-auto fs-4 text-center text' :class="'text-' + modalData.body.textStyle">{{
+            modalData.body.text }}</span>
+        </div>
+      </div>
+    </div>
+  </base-layout>
+</template>
+
+<script>
+import { ref, onMounted } from 'vue';
+import { ionInput, IonIcon } from '@ionic/vue';
+import { useRouter } from 'vue-router';
+import * as bootstrap from 'bootstrap';
+import axios from 'axios';
+import { logoGoogle, logoFacebook, logoTwitter } from 'ionicons/icons';
+import { useI18n } from 'vue-i18n';
+import NewUser from '../components/phone/NewUser.vue';
+
+export default {
+  name: 'Phone',
+  components: { ionInput, IonIcon, NewUser },
+  setup() {
+    const { t } = useI18n();
+    const Icons = { logoGoogle, logoFacebook, logoTwitter };
+    const modalData = ref({ body: { img: '', text: '', textStyle: '' } });
+    const router = useRouter();
+    let offcanvas;
+    const otpActive = ref(true);
+    const otpSent = ref(false);
+    const otpVerified = ref(false);
+    const otpStatus = ref(0);
+    const userExist = ref(false);
+    const resetPassword = ref(false);
+    const userName = ref('!');
+    const phone = ref('');
+    const phonepattern = /^(10|11|12|15)\d{8}$/;
+
+    onMounted(() => {
+      offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
+    });
+    const  otpActivation = async () => {
+      const url = `${process.env.VUE_APP_API_URL}/api/otp-activation`;
+      await axios.post(url,{phone:phone.value})
+              .then(res => {
+                console.log(res);
+                if(!res.data.otpActive){
+                  otpSent.value = true;
+                  otpVerified.value = true;
+                  otpActive.value = false;
+                }
+                userExist.value = res.data.UserExist;
+                userName.value  = res.data.UserExist ? res.data.name : '';
+              })
+              .catch(err => console.log(err))
+    }
+    const submitPhone = () => {
+      const form = document.querySelector('.form-container > form#phone-form');
+      const formData = new FormData(form);
+      phone.value = formData.get('phone').substring(1);
+      otpActivation();
+      // check if input isn't empty
+      if (phone.value === 0 || !phonepattern.test(phone.value)) {
+        modalData.value.loader = false;
+        modalData.value.header = t('phone.Phone not correct');
+        modalData.value.body = { img: '/assets/icons/fail.png', text: t('phone.Please enter valid phone number'), textStyle: 'danger' };
+        offcanvas.show();
+        return;
+      }
+      const url = `${process.env.VUE_APP_API_URL}/api/otp`;
+      sendOtp();
+    };
+    const sendOtp = () => {
+      const url = `${process.env.VUE_APP_API_URL}/api/otp`;
+      axios.post(url, { phone: phone.value })
+        .then((res) => {
+          console.log(res);
+          modalData.value.header = t('Waiting ...');
+          modalData.value.loader = true;
+          offcanvas.show();
+          setCounter();
+          setTimeout(() => { otpSent.value = true; offcanvas.hide(); }, 2000);
+        })
+        .catch((err) => {
+          modalData.value.loader = false;
+          modalData.value.header = t('Something went wrong');
+          modalData.value.body = { img: '/assets/icons/fail.png', text: t('phone.failed to send otp please check your number and try again'), textStyle: 'danger' };
+          offcanvas.show();
+        });
+    }
+    const verifyOtp = () => {
+      countdown != null ? clearInterval(countdown) : '';
+      const form = document.querySelector('.form-container > form#otp');
+      const formData = new FormData(form);
+      const otp = formData.get('otp');
+
+      const url = `${process.env.VUE_APP_API_URL}/api/check-otp`;
+      axios.post(url, { phone: phone.value, otp })
+        .then((res) => {
+          console.log(res);
+          otpVerified.value = true;
+          userName.value = res.status == 200 ? res.data.name : '!';
+          otpStatus.value = 1;
+          modalData.value.header = t('Waiting ...');
+          modalData.value.loader = true;
+          offcanvas.show();
+
+          setTimeout(() => {
+            userExist.value = res.status == 200;
+            offcanvas.hide();
+          }, 2000);
+        })
+        .catch((err) => { console.log(err); otpVerified.value = false; otpStatus.value = 2; });
+    };
+
+    const loginUser = () => {
+      modalData.value.header = t('Waiting ...');
+      modalData.value.loader = true;
+      offcanvas.show();
+
+      const form = document.querySelector('.form-container > form#old-user');
+      const formData = new FormData(form);
+      const password = formData.get('password');
+      const url = `${process.env.VUE_APP_API_URL}/api/login`;
+
+      axios.post(url, { phone: phone.value, password })
+        .then((res) => {
+          console.log(res);
+          if (res.status == 200) {
+            // Storing token
+            localStorage.setItem('token', JSON.stringify(
+              {
+                token: res.data.token.access_token,
+                tokenType: res.data.token.token_type,
+              },
+            ));
+            // Storing User Data
+            localStorage.setItem('userData', JSON.stringify(
+              {
+                id: res.data.user.id,
+                first_name: res.data.user.first_name,
+                last_name: res.data.user.last_name,
+                email: res.data.user.email,
+                phone: res.data.user.phone,
+                photo: res.data.user.photo,
+                cards: res.data.user.cards,
+              },
+            ));
+            modalData.value.loader = false;
+            modalData.value.header = t("Login Succeeded");
+            modalData.value.body = { img: '/assets/icons/success.png', text: t("phone.Account logged in successfully Youll be redirected to home page"), textStyle: 'success' };
+
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 2000);
+          } else {
+            modalData.value.loader = false;
+            modalData.value.header = t("Login Failed");
+            modalData.value.body = { img: '/assets/icons/fail.png', text: t("phone.cant login account, please try again"), textStyle: 'danger' };
+          }
+
+          setTimeout(() => { offcanvas.hide(); }, 3000);
+        })
+        .catch((err) => {
+          console.log(err);
+          modalData.value.loader = false;
+          modalData.value.header = t('Login Failed');
+          modalData.value.body = { img: '/assets/icons/fail.png', text: t("phone.cant login account, please try again"), textStyle: 'danger' };
+          setTimeout(() => { offcanvas.hide(); }, 3000);
+        });
+    };
+
+    const register = async () => {
+      offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
+
+      const passwordPattern = /^.{8,}$/;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const requiredValues = ['fname', 'lname', 'email', 'phone', 'password', 'confirm'];
+      const data = {};
+      const inputs = ['fname', 'lname', 'email', 'phone', 'password', 'confirm'];
+      const errMessages = [];
+
+      const formData = new FormData(document.querySelector('form#new-user'));
+      inputs.map((value, index) => {
+        data[value] = formData.get(value);
+      });
+      data.phone = phone.value;
+      // check if required data is exist
+      requiredValues.map((value) => {
+        if (data[value] === 'undefined' || data[value] === 'null') {
+          errMessages.push(`${value} shouldn't be empty`);
+        }
+      });
+
+      // validate email
+      if (data.email && !emailPattern.test(data.email)) {
+        errMessages.push(t('validation.The entered Email isnt correct'));
+        console.log(errMessages);
+      }
+
+      // Validate password
+      if (!passwordPattern.test(data.password)) {
+        errMessages.push(t('validation.The Minimum length of password should be 8 characters'));
+      }
+
+      if (data.password !== data.confirm) {
+        errMessages.push(t('validation.the password and confirm password not identical'));
+      }
+
+      if (data.email && !errMessages.length) {
+        // Check Email
+        const url = `${process.env.VUE_APP_API_URL}/api/checkemail`;
+        await axios.post(url, { email: data.email })
+          .then((response) => {
+            if (response.data == 1) {
+              errMessages.push(t('validation.Email address is already exist'));
+            }
+          })
+          .catch((error) => {
+            errMessages.push(t('validation.Failed to connect the server, Please try agian'));
+          });
+      }
+
+      // Check Phone
+      if (data.phone && !errMessages.length) {
+        const url = `${process.env.VUE_APP_API_URL}/api/checkphone`;
+        await axios.post(url, { phone: data.phone })
+          .then((response) => {
+            if (response.data == 1) {
+              errMessages.push('Phone number is already exist');
+            }
+          })
+          .catch((error) => {
+            errMessages.push('Failed to connect the server, Please try agian');
+          });
+      }
+      // stoping from sending register request
+      if (errMessages.length) {
+        modalData.value.loader = false;
+        modalData.value.header = t("validation.Cant register account");
+        modalData.value.body = { img: '/assets/icons/fail.png', text: `${errMessages[0]}`, textStyle: 'danger' };
+        offcanvas.show();
+        return;
+      }
+
+      modalData.value.header = t('Waiting ...');
+      modalData.value.loader = true;
+      offcanvas.show();
+
+      const url = `${process.env.VUE_APP_API_URL}/api/register`;
+      await axios.post(url, data)
+        .then((res) => {
+          if (res.status == 200) {
+            localStorage.setItem('token', JSON.stringify(
+              {
+                token: res.data.original.token.access_token,
+                tokenType: res.data.original.token.token_type,
+              },
+            ));
+            console.log(res);
+            // Storing User Data
+            localStorage.setItem('userData', JSON.stringify(
+              {
+                id: res.data.original.user.id,
+                first_name: res.data.original.user.first_name,
+                last_name: res.data.original.user.last_name,
+                email: res.data.original.user.email,
+                phone: res.data.original.user.phone,
+                photo: res.data.original.user.photo,
+                cards: res.data.original.user.cards,
+              },
+            ));
+
+            modalData.value.loader = false;
+            modalData.value.header = t('phone.Registration Succeeded');
+            modalData.value.body = { img: '/assets/icons/success.png', text:t("phone.Account registered successfully Youll be redirected to home page"), textStyle: 'success' };
+            setTimeout(() => { window.location.href = '/'; }, 3000);
+          } else {
+            console.log('res', res);
+
+            modalData.value.loader = false;
+            modalData.value.header = 'Registration Failed';
+            modalData.value.body = { img: '/assets/icons/fail.png', text: t("phone.Cant register account beacuase ,please try again"), textStyle: 'danger' };
+          }
+        })
+        .catch((err) => {
+          console.log('err', err);
+
+          modalData.value.loader = false;
+          modalData.value.header = 'Registration Failed';
+          modalData.value.body = { img: '/assets/icons/fail.png', text: t("phone.Cant register account beacuase ,please try again"), textStyle: 'danger' };
+        });
+    };
+
+    let countdown;
+    const setCounter = () => {
+      countdown != null ? clearInterval(countdown) : '';
+      const countdownDuration = 5 * 60 * 1000;
+      const startTime = new Date().getTime();
+      countdown = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const remainingTime = countdownDuration - (currentTime - startTime);
+
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        // Check if the countdown is finished
+        if (remainingTime <= 0) {
+          clearInterval(countdown);
+          console.log('Countdown finished!');
+          document.querySelector('#counter').innerHTML = t('phone.The otp has been expired');
+          return;
+        }
+        // Display the remaining time
+        document.querySelector('#counter').innerHTML = `${t('phone.The otp will expire in')} ${minutes}:${(seconds > 9 ? seconds : `0${seconds}`)}`;
+      }, 1000);
+    };
+    const resetUserPassword = () => {
+      otpSent.value = false;
+      otpVerified.value = false;
+      otpStatus.value = 0;
+      console.log(phone.value);
+      sendOtp();
+      resetPassword.value = true;
+    }
+    const submitResetPassword = () => {
+      offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
+
+      const passwordPattern = /^.{8,}$/;
+      const requiredValues = ['password', 'confirm'];
+      const data = {};
+      const errMessages = [];
+
+      const formData = new FormData(document.querySelector('form#reset-password'));
+      data["password"] = formData.get("password");
+      data["confirm"] = formData.get("confirm");
+      data.phone = phone.value;
+      // check if required data is exist
+      requiredValues.map((value) => {
+        if (data[value] === 'undefined' || data[value] === 'null') {
+          errMessages.push(`${value} shouldn't be empty`);
+        }
+      });
+
+      // Validate password
+      if (!passwordPattern.test(data.password)) {
+        errMessages.push(t('validation.The Minimum length of password should be 8 characters'));
+      }
+
+      if (data.password !== data.confirm) {
+        errMessages.push(t('validation.the password and confirm password not identical'));
+      }
+
+      // stoping from sending reset request
+      if (errMessages.length) {
+        modalData.value.loader = false;
+        modalData.value.header = t('validation.Can\'t register account');
+        modalData.value.body = { img: '/assets/icons/fail.png', text: `${errMessages[0]}`, textStyle: 'danger' };
+        offcanvas.show();
+        return;
+      }
+
+      modalData.value.header = t('Waiting ...');
+      modalData.value.loader = true;
+      offcanvas.show();
+
+      const url = `${process.env.VUE_APP_API_URL}/api/reset-password`;
+      axios.post(url, data)
+        .then(res => {
+          console.log(res);
+          // Login user 
+          // Storing token
+          localStorage.setItem('token', JSON.stringify(
+            {
+              token: res.data.token.access_token,
+              tokenType: res.data.token.token_type,
+            },
+          ));
+          // Storing User Data
+          localStorage.setItem('userData', JSON.stringify(
+            {
+              id: res.data.user.id,
+              first_name: res.data.user.first_name,
+              last_name: res.data.user.last_name,
+              email: res.data.user.email,
+              phone: res.data.user.phone,
+              photo: res.data.user.photo,
+              cards: res.data.user.cards,
+            },
+          ));
+          modalData.value.loader = false;
+          modalData.value.header = t('Login Succeeded');
+          modalData.value.body = { img: '/assets/icons/success.png', text: t("phone.Your Password has been reset successfully"), textStyle: 'success' };
+
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        })
+        .catch(err => console.log(err))
+    }
+
+    const locale = localStorage.locale;
+    return {
+      Icons,
+      modalData,
+      submitPhone,
+      sendOtp,
+      verifyOtp,
+      otpSent,
+      otpVerified,
+      otpStatus,
+      userExist,
+      loginUser,
+      userName,
+      phone,
+      register,
+      resetPassword,
+      resetUserPassword,
+      submitResetPassword,
+      t,
+      locale
+    };
+  },
+};
+</script>
+
+<style scoped>
+/* @import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Merriweather+Sans:wght@400;700&family=Noto+Sans:wght@300;400;500&family=Rubik:wght@300;400;500&display=swap'); */
+
+/* @media screen and (max-width: 600px) { */
+
+  span,
+  button,
+  input,
+  h1,
+  h2 {
+    * {
+      font-size: 1.2rem;
+    }
+
+    /* font-family: 'Noto Sans',
+    sans-serif; */
+  }
+
+  .icons>img {
+    width: 50px;
+    margin: 20px;
+  }
+
+  .lower-part {
+    clip-path: polygon(0 25%, 16% 0, 100% 0, 200% 100%, 0 100%);
+  }
+
+  /* New user Form */
+  /* form#new-user div.form-container{
+  margin: 10px  auto;
+  text-align: center;
+  width: 75%;
+  margin-top: 35%;
+}
+form#new-user div.form-container > img {
+  width: 100px;
+  margin: 30px 0;
+} */
+  form#new-user div.form-inputs ion-input {
+    background-color: rgb(238, 238, 238);
+    border-radius: 20px;
+    padding: 5px !important;
+    margin: 5px auto;
+    text-align: start;
+    font-size: 1rem;
+  }
+
+  form#new-user div.form-submit>button {
+    /* font-family: 'Merriweather', serif;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-family: 'Rubik', sans-serif; */
+    background-color: var(--main-color-light);
+    color: #fff;
+    border: 1px solid;
+    border-color: var(--color);
+    padding: 10px 50px;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    box-shadow: var(--main-color-light) 1px 4px 15px;
+    margin: 10px;
+    width: 200px;
+  }
+
+  /* another forms */
+  div.form-submit>button {
+    /* font-family: 'Merriweather', serif;
+    font-family: 'Merriweather Sans', sans-serif;
+    font-family: 'Rubik', sans-serif; */
+    background-color: var(--main-color-light);
+    color: #fff;
+    border: 1px solid;
+    border-color: var(--color);
+    padding: 10px 50px;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    /* box-shadow: var(--main-color-light) 1px 4px 15px; */
+    margin: 10px;
+    width: 200px;
+  }
+
+  div.form-container div.form-inputs>ion-input {
+    background-color: rgb(238, 238, 238);
+    border-radius: 10px;
+    width: 80%;
+    padding: 10px !important;
+    height: 60px;
+    margin: 10px auto;
+    text-align: start;
+    font-size: 1.3rem;
+  }
+
+  .phone-logo {
+    width: 70%;
+  }
+
+/* } */
+
+/* .num-input
+{
+
+} */
+
+.text-main-color {
+  color: var(--main-color-light);
+}
+
+div.form-container {
+  margin: 5% auto 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+  font-size: 1.5rem;
+}
+
+div.form-container>img {
+  width: 100px;
+  margin: 30px 0;
+}
+
+/* Spinner */
+div.spinner-border {
+  color: var(--background);
+  margin: 0 auto;
+  display: block;
+}
+
+/* Break line */
+
+.break-line {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.break-line::before,
+.break-line::after {
+  content: "";
+  position: absolute;
+  top: 60%;
+  width: 40%;
+  height: 1px;
+  background-color: black;
+}
+
+.break-line::before {
+  right: 5%;
+}
+
+.break-line::after {
+  left: 5%;
+}
+
+.break-line span {
+  position: relative;
+  padding: 5px 10px;
+  background-color: white;
+  border: 2px solid #ddd;
+  color: #7d7a7a;
+}
+
+/* Logging Buttons */
+.login-button {
+  display: inline-block;
+  padding: 8px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  margin: 10px;
+  width: 22px;
+}
+
+.facebook {
+  background-color: #3b5998;
+  color: white;
+}
+
+.google {
+  background-color: #db4a39;
+  color: white;
+}
+
+.twitter {
+  background-color: #1da1f2;
+  color: white;
+}
+
+/* Modal */
+#offcanvasPhone {
+  --bs-offcanvas-height: 55%;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  border-top: 5px solid #f68d41;
+  padding: 0 10px;
+}
+
+.offcanvas-header {
+  padding: 20px 20px 0 0;
+}
+
+.offcanvas-body {
+  padding: 0;
+  padding-top: 30px;
+}
+
+
+/* Ipad pro*/
+@media screen and (min-width: 550px) {
+  .phone-logo {
+    width: 40%;
+  }
+}
+</style>
