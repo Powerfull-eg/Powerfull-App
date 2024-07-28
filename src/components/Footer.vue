@@ -133,6 +133,7 @@ export default {
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasScan'));
       offcanvasCard.value = new bootstrap.Offcanvas(document.querySelector('#offcanvasCard'));
       bsModal.value = new bootstrap.Modal(document.querySelector('#giftModal'), { backdrop: false, keyboard: false });
+      setInterval( () => { getCards(); }, 5000 );
     });
     // Scan Functions
     // Validate the scanning result url
@@ -204,6 +205,7 @@ export default {
       return cards;
     };
     watchEffect(getCards);
+    
     // make user chppse bretween current cards
     const selectCard = async (card) => {
       const orders = await getOrders();
@@ -386,8 +388,8 @@ div.footer {
   justify-content: space-evenly;
   background: var(--background);
   min-height: 10%;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
+  /* border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px; */
 }
 
 div.icon-container ion-icon {

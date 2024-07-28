@@ -77,6 +77,10 @@ export default {
     const Icons = ref({ navigateCircleSharp });
     const devices = localStorage.getItem('devices');
 
+  //settings 
+    const store = useStore();
+    const settings = ref(store.getters["settings/settings"]);
+
     const openScanner = () => {
       setModalOpen(false);
       const offcanvasCard = new bootstrap.Offcanvas(document.querySelector('#offcanvasCard'));
@@ -90,8 +94,8 @@ export default {
       const { Map } = await google.maps.importLibrary('maps');
 
       map = new Map(document.getElementById('map'), {
-        center: { lat: 30.033333, lng: 31.233334 },
-        zoom: 8,
+        center: { lat: (settings.value.map.lat || 30.033333), lng: (settings.value.map.lng || 31.233334) },
+        zoom: (settings.value.map.zoom || 8),
         disableDefaultUI: true,
         terms: false,
         keyboardShortcuts: false,

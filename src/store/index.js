@@ -7,6 +7,7 @@ import files from './modules/files/index';
 import user from './modules/user/index';
 import menu from './modules/menu/index';
 import map from './modules/map/index';
+import settings from './modules/settings/index';
 
 const store = createStore({
   modules: {
@@ -16,6 +17,7 @@ const store = createStore({
     user,
     menu,
     map,
+    settings
   },
 });
 

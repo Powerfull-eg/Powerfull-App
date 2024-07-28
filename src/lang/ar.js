@@ -9,6 +9,8 @@ export default {
     "All Stations": "كل المحطات",
     "Subject":"الموضوع",
     "Massege":"الرسالة",
+    "Maintenance": "الصيانة",
+    "Restart": "اعادة تشغيل",
     "Menu": "القائمة",
     "Map": "الخريطة",
     "About": "نبذة عنا",

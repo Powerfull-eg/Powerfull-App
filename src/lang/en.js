@@ -9,6 +9,8 @@ export default {
     "All Stations": "All Stations",
     "Subject":"Subject",
     "Massege":"Massege",
+    "Maintenance": "Maintenance",
+    "Restart": "Restart",
     "Menu": "Menu",
     "Map": "Map",
     "About": "About",

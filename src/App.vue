@@ -12,9 +12,9 @@
         <span class='d-block mx-auto fs-4 text-center text' :class="'text-' + modalData.body.textStyle">{{ modalData.body.text }}</span>
         <div class="routerbtn d-flex justify-content-evenly">
           <router-link @click="redirectToLocations()" to="/locations" class="btn btn-primary mx-auto my-3">
-            Locations
+            {{t('Locations')}}
           </router-link>
-          <a @click="restartApp()"  class="btn btn-primary mx-auto my-3"> Restart </a>
+          <a @click="restartApp()"  class="btn btn-primary mx-auto my-3"> {{t('Restart')}} </a>
         </div>
       </div>
     </div>
@@ -47,7 +47,8 @@ import Menu from './components/Menu.vue';
 import './composition/startApp';
 import { useRouter } from 'vue-router';
 import * as bootstrap from 'bootstrap';
-
+import { useI18n } from 'vue-i18n';
+import  { useStore } from 'vuex';
 export default defineComponent({
   name: 'App',
   components: {
@@ -62,9 +63,12 @@ export default defineComponent({
     const router = useRouter();
     const { openToast } = useToast();
     const modalData = ref({ body: { img: '', text: '', textStyle: '' } });
+    const store = useStore();
+    const settings = ref(store.getters["settings/settings"]);
     let offcanvas;
-
+    
     onMounted(() => {
+      console.log(settings.value);
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasApp'));
       // for ios 
       // const player = document.querySelector('#lottie-container lottie-player');
@@ -82,7 +86,9 @@ export default defineComponent({
             navigator.geolocation.getCurrentPosition((pos) => { localStorage.setItem('userLocation', JSON.stringify(pos)); }, (err) => { console.log(err); }, { enableHighAccuracy: true });
             // hide Loader
             hideLoader.value = true;
-            const target = localStorage?.oldGuest != true ? 'Intro' : localStorage.isAuth == true ? 'home' : 'phone';
+            let target = localStorage?.oldGuest != true ? 'Intro' : localStorage.isAuth == true ? 'home' : 'phone';
+            target = settings.value.maintenance ?  'Maintenance' : target;
+            console.log(target);
             router.push({ name: target });
           } else {
             modalData.value.header = 'No Internet Connection';
@@ -98,8 +104,10 @@ export default defineComponent({
       hideLoader.value = true;
       offcanvas.hide();
     };
+
+    const { t } = useI18n();
     return {
-      hideLoader, openToast, modalData, restartApp, redirectToLocations,
+      hideLoader, openToast, modalData, restartApp, redirectToLocations,t
     };
   },
 });

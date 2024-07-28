@@ -40,6 +40,11 @@ const routes = [
         component: () => import('../pages/Locations.vue'),
       },
       {
+        path: '/maintenance',
+        name: 'Maintenance',
+        component: () => import('../pages/Maintenance.vue'),
+      },
+      {
         path: '/not-authorized',
         name: 'not-authorized',
         component: () => import('../pages/NotAuthorized.vue'),

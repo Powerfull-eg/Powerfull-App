@@ -9,7 +9,8 @@
     "build:qa": "vue-cli-service build --dest dist-qa --mode staging && npm run postbuild",
     "postbuild": "npx cap copy",
     "resources:android": "cordova-res android --skip-config --copy",
-    "resources:ios": "cordova-res ios --skip-config --copy"
+    "resources:ios": "cordova-res ios --skip-config --copy",
+    "ssl": "export NODE_OPTIONS=--openssl-legacy-provider"
   },
   "dependencies": {
     "@awesome-cordova-plugins/barcode-scanner": "^6.4.0",

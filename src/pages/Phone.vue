@@ -166,6 +166,7 @@ export default {
     const phonepattern = /^(10|11|12|15)\d{8}$/;
 
     onMounted(() => {
+      otpActivation();
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
     });
     const  otpActivation = async () => {
@@ -445,11 +446,12 @@ export default {
       }, 1000);
     };
     const resetUserPassword = () => {
-      otpSent.value = false;
-      otpVerified.value = false;
-      otpStatus.value = 0;
-      console.log(phone.value);
-      sendOtp();
+      if(otpActive.value){
+        otpSent.value = false;
+        otpVerified.value = false;
+        otpStatus.value = 0;
+        sendOtp();
+      }
       resetPassword.value = true;
     }
     const submitResetPassword = () => {
