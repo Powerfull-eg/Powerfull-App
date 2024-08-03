@@ -21,7 +21,7 @@
                   type="number" :placeholder="t('phone.Phone Number')"></ion-input>
 
                 <div class="form-submit">
-                  <button type="submit">{{t('Confirm')}}</button>
+                  <button id="submit-phone" type="submit">{{t('Confirm')}}</button>
                 </div>
                 <!-- <div class="icons justify-content-center d-flex flex-row w-100">
               <img src="assets/icons/facebook.png" alt="">
@@ -185,10 +185,22 @@ export default {
               .catch(err => console.log(err))
     }
     const submitPhone = () => {
+
+      // Prevent multiple clicks
+      const submitBtn = document.querySelector('#submit-phone');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = t('Confirm');
+      }, 3000);
+
       const form = document.querySelector('.form-container > form#phone-form');
       const formData = new FormData(form);
       phone.value = formData.get('phone').substring(1);
+
       otpActivation();
+      
       // check if input isn't empty
       if (phone.value === 0 || !phonepattern.test(phone.value)) {
         modalData.value.loader = false;
@@ -197,6 +209,7 @@ export default {
         offcanvas.show();
         return;
       }
+
       const url = `${process.env.VUE_APP_API_URL}/api/otp`;
       sendOtp();
     };

@@ -1,9 +1,9 @@
 <template>
   <base-layout hideHeader hideMenuBtn map loading="lazy">
     <div class="maintenance">
-        <h1 class="title">{{ settings?.maintenance?.title ?? t('Under Maintenance') }}</h1>
+        <h1 class="title">{{ settings?.maintenanceTitle ?? t('Under Maintenance') }}</h1>
         <p class="message">
-            {{ settings?.maintenance?.message ?? t('App is not available at the moment') }}
+            {{ settings?.maintenanceMessage ?? t('App is not available at the moment') }}
            </p>
         <img src="/assets/images/Maintenance.svg" alt="Maintenance">
         <button class="btn btn-primary" @click="exitApp()">{{ t('Exit') }}</button>
@@ -12,7 +12,7 @@
 </template>
 <script>
 import { useI18n } from 'vue-i18n';
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import {useRouter} from 'vue-router';
 import { useStore } from 'vuex';
 export default {
