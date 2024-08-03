@@ -3,7 +3,8 @@ import axios from "axios";
 export default {
   async fetchSettings({ commit }) {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/settings');
+      const url = `${process.env.VUE_APP_API_URL}/api/settings`;
+      const response = await axios.get(url);
       const settings = response.data;
       commit('setSettings', settings);
       console.log(settings);
