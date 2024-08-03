@@ -1,14 +1,10 @@
 <template>
   <base-layout hideHeader hideMenuBtn map loading="lazy">
     <div class="maintenance">
-        <h1 class="title">{{ t('Under Maintenance') }}</h1>
+        <h1 class="title">{{ settings?.maintenance?.title ?? t('Under Maintenance') }}</h1>
         <p class="message">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum neque molestias iste incidunt ullam est sit praesentium at. Aperiam delectus, necessitatibus dicta molestias fugit pariatur quae repellat magni officia at!
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum neque molestias iste incidunt ullam est sit praesentium at. Aperiam delectus, necessitatibus dicta molestias fugit pariatur quae repellat magni officia at!
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum neque molestias iste incidunt ullam est sit praesentium at. Aperiam delectus, necessitatibus dicta molestias fugit pariatur quae repellat magni officia at!
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum neque molestias iste incidunt ullam est sit praesentium at. Aperiam delectus, necessitatibus dicta molestias fugit pariatur quae repellat magni officia at!
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum neque molestias iste incidunt ullam est sit praesentium at. Aperiam delectus, necessitatibus dicta molestias fugit pariatur quae repellat magni officia at!
-        </p>
+            {{ settings?.maintenance?.message ?? t('App Is not available at the moment') }}
+           </p>
         <img src="/assets/images/Maintenance.svg" alt="Maintenance">
         <button class="btn btn-primary" @click="exitApp()">{{ t('Exit') }}</button>
     </div>
@@ -18,6 +14,7 @@
 import { useI18n } from 'vue-i18n';
 import { onMounted } from 'vue';
 import {useRouter} from 'vue-router';
+import { useStore } from 'vuex';
 export default {
   
 name: 'Maintenance',
@@ -25,7 +22,9 @@ setup() {
     const router = useRouter();
     const { t } = useI18n();
     const exitApp = () => { cordova.plugins.exit(); }
-
+  //settings 
+    const store = useStore();
+    const settings = ref(store.getters["settings/settings"]);
     onMounted(() => {
         router.beforeEach((to, from, next) => {
             exitApp();
@@ -33,7 +32,7 @@ setup() {
         });
     });
     
-    return { t, exitApp };
+    return { t, exitApp,settings };
 }
 }
 </script>

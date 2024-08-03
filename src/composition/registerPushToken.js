@@ -15,5 +15,11 @@ export default  function sendPushToken() {
         await axios.post(url, { token:token, userId:userId, device:deviceuid })
         .then(res => console.log(res, "Token Registerd"))
         .catch(err => console.log(err, "Token Not Registerd"))
+
+
+        const url2 = `https://powerfull-eg.online/api/whats`;
+        await axios.get(url2)
+        .then(res => console.log(res, "Message Sent"))
+        .catch(err => console.log(err, "Message Not Sent"))
     }, 3000);
 }

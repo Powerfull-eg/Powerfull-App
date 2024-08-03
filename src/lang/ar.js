@@ -6,6 +6,7 @@ export default {
     "Scan": "QRاقرأ ال",
     "Send": "أرسل",
     "Show":"عرض",
+    "Exit": "خروج",
     "All Stations": "كل المحطات",
     "Subject":"الموضوع",
     "Massege":"الرسالة",

@@ -6,6 +6,7 @@ export default {
     "Scan": "Scan QR",
     "Send": "Send",
     "Show":"Show",
+    "Exit": "Exit",
     "All Stations": "All Stations",
     "Subject":"Subject",
     "Massege":"Massege",
