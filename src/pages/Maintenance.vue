@@ -3,7 +3,7 @@
     <div class="maintenance">
         <h1 class="title">{{ settings?.maintenance?.title ?? t('Under Maintenance') }}</h1>
         <p class="message">
-            {{ settings?.maintenance?.message ?? t('App Is not available at the moment') }}
+            {{ settings?.maintenance?.message ?? t('App is not available at the moment') }}
            </p>
         <img src="/assets/images/Maintenance.svg" alt="Maintenance">
         <button class="btn btn-primary" @click="exitApp()">{{ t('Exit') }}</button>

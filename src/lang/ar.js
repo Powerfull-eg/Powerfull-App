@@ -96,6 +96,8 @@ export default {
     "Your Code is:":"الكود الخاص بك هو :",
     "Do you accept":"هل توافق على ",
     "Send Your Message":"أرسل رسالتك",
+    "Under Maintenance": "تحت الصيانة",
+    "App is not available at the moment": "التطبيق غير متوفر حاليا",
     // Settings
     settings : {
         "Profile":"الملف الشخصي",

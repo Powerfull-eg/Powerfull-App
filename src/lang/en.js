@@ -95,6 +95,8 @@ export default {
     "Your Code is:":"Your Code is:",
     "Do you accept":"Do you accept",
     "Send Your Message":"Send Your Message",
+    "Under Maintenance": "Under Maintenance",
+    "App is not available at the moment": "App is not available at the moment",
     "settings": {
         "Profile": "Profile",
         "Gifts": "Gifts",
