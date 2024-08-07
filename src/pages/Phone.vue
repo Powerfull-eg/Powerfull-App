@@ -250,6 +250,13 @@ export default {
 
           setTimeout(() => {
             userExist.value = res.status == 200;
+            if(userExist.value){
+              loginUser();
+              otpSent.value = false;
+              otpVerified.value = false;
+              otpStatus.value = 0;
+              return;
+            }
             offcanvas.hide();
           }, 2000);
         })
