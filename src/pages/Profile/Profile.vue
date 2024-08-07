@@ -87,8 +87,20 @@ export default {
       requiredData.map((e) => {
         formData.get(e) !== '' ? data[e] = formData.get(e) : '';
       });
+      
+      // Remove zero from phone
+      data.phone = data.phone ? data.phone.replace(/^0/, '') : '';
+      
       // validate data
-      if (data.email && !emailPattern.test(data.email)) { errMessages.push(t('validation.Email is not correct')); } else if (data.password && !passwordPattern.test(data.password)) { errMessages.push(t("validation.password cant be less than 8 characters")); } else if (data.phone && !phonepattern.test(data.phone)) { errMessages.push(t('validation.Phone is not correct')); } else if (!data.phone && !data.email) { errMessages.push(t('validation.You should fill at least one of email and phone')); }
+      if (data.email && !emailPattern.test(data.email)) { 
+        errMessages.push(t('validation.Email is not correct')); 
+      } else if (data.password && !passwordPattern.test(data.password)) {
+         errMessages.push(t("validation.password cant be less than 8 characters")); 
+      } else if (data.phone && !phonepattern.test(data.phone)) { 
+          errMessages.push(t('validation.Phone is not correct')); 
+      } else if (!data.phone && !data.email) {
+          errMessages.push(t('validation.You should fill at least one of email and phone')); 
+      }
       // Catch errors
       if (errMessages.length) {
         console.log(errMessages);
@@ -98,8 +110,6 @@ export default {
         return;
       }
 
-      // Remove zero from phone
-      data.phone = data.phone ? data.phone.substring(1) : '';
 
       // send data to update
       axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
@@ -109,7 +119,8 @@ export default {
           console.log(res);
           // update user data
           localStorage.userData = JSON.stringify(res.data);
-          watchEffect(() => { userData.value = JSON.parse(localStorage.userData); console.log('watched'); });
+          userData.value = res.data;
+          // watchEffect(() => { userData.value = JSON.parse(localStorage.userData); });
           // show success modal
           modalData.value.loader = true;
           offcanvas.show();
