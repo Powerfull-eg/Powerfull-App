@@ -137,6 +137,7 @@ export default {
         "Enter your phone number":"أدخل رقم تليفونك",
         "Continue as guest":"الإكمال كزائر",
         "Enter your otp number that we sent to your phone":"أدخل الرقم السري المؤقت الذي تم إرساله إلي تليفونك",
+        "Enter your otp number that we sent to your email":"أدخل الرقم السري المؤقت الذي تم إرساله إلي بريدك الإلكتروني",
         "OTP is correct":"الرقم السري المؤقت صحيح",
         "OTP is not correct, please try again": "الرقم السري المؤقت خاطئ برجاء إعادة المحاولة",
         "didnt get code?" :"لم يصل إليك الرقم السري المؤقت ؟",

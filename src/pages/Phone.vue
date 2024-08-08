@@ -37,7 +37,7 @@
             </form>
             <form v-else-if="otpSent && !otpVerified" style="margin-bottom: 2rem;" id="otp" @submit.prevent="verifyOtp()">
               <div style="padding-top: 50px;" class="form-inputs fs-6 d-flex flex-column">
-                <span class="m-2">{{ t("phone.Enter your otp number that we sent to your phone")}}</span>
+                <span class="m-2">{{emailOtp ? t("phone.Enter your otp number that we sent to your email") : t("phone.Enter your otp number that we sent to your phone")}}</span>
                 <ion-input name="otp" v-model="otp" autocomplete label-placement="floating" type="number"
                   placeholder="OTP"></ion-input>
                 <span id="counter" class="text text-danger text-center mb-3"></span>
@@ -160,6 +160,7 @@ export default {
     const otpVerified = ref(false);
     const otpStatus = ref(0);
     const userExist = ref(false);
+    const emailOtp = ref(false);
     const resetPassword = ref(false);
     const userName = ref('!');
     const phone = ref('');
@@ -214,8 +215,9 @@ export default {
       sendOtp();
     };
     const sendOtp = () => {
+      const type = emailOtp.value ? "email" : "phone";
       const url = `${process.env.VUE_APP_API_URL}/api/otp`;
-      axios.post(url, { phone: phone.value })
+      axios.post(url, { phone: phone.value, type })
         .then((res) => {
           console.log(res);
           modalData.value.header = t('Waiting ...');
@@ -229,6 +231,7 @@ export default {
           modalData.value.header = t('Something went wrong');
           modalData.value.body = { img: '/assets/icons/fail.png', text: t('phone.failed to send otp please check your number and try again'), textStyle: 'danger' };
           offcanvas.show();
+          resetPassword.value = false;
         });
     }
     const verifyOtp = () => {
@@ -250,7 +253,7 @@ export default {
 
           setTimeout(() => {
             userExist.value = res.status == 200;
-            if(userExist.value){
+            if(userExist.value && !resetPassword.value){
               loginUser();
               otpSent.value = false;
               otpVerified.value = false;
@@ -271,7 +274,7 @@ export default {
       const form = document.querySelector('.form-container > form#old-user');
       const formData = new FormData(form);
       const password = formData.get('password');
-      const url = `${process.env.VUE_APP_API_URL}/api/login`;
+      const url = `${process.env.VUE_APP_API_URL}/api/loginNew`;
 
       axios.post(url, { phone: phone.value, password })
         .then((res) => {
@@ -466,12 +469,11 @@ export default {
       }, 1000);
     };
     const resetUserPassword = () => {
-      if(otpActive.value){
-        otpSent.value = false;
-        otpVerified.value = false;
-        otpStatus.value = 0;
-        sendOtp();
-      }
+      otpSent.value = false;
+      otpVerified.value = false;
+      otpStatus.value = 0;
+      emailOtp.value = true;
+      sendOtp("email");
       resetPassword.value = true;
     }
     const submitResetPassword = () => {
@@ -569,7 +571,8 @@ export default {
       resetUserPassword,
       submitResetPassword,
       t,
-      locale
+      locale,
+      emailOtp
     };
   },
 };

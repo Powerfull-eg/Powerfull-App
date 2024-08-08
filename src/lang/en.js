@@ -135,6 +135,7 @@ export default {
         "Enter your phone number": "Enter your phone number",
         "Continue as guest": "Continue as guest",
         "Enter your otp number that we sent to your phone": "Enter the OTP number that we sent to your phone",
+        "Enter your otp number that we sent to your email": "Enter your otp number that we sent to your email",
         "OTP is correct": "OTP is correct",
         "OTP is not correct, please try again": "OTP is not correct, please try again",
         "didnt get code?": "Didn't get the code?",
