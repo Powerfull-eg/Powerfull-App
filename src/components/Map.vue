@@ -96,6 +96,7 @@ export default {
       map = new Map(document.getElementById('map'), {
         center: { lat: (settings.value.map.lat || 30.033333), lng: (settings.value.map.lng || 31.233334) },
         zoom: (settings.value.map.zoom || 8),
+        mapId: (settings.value.map.mapId || 'a55a8dd1e435899e'),
         disableDefaultUI: true,
         terms: false,
         keyboardShortcuts: false,
