@@ -24,7 +24,7 @@
       <Menu />
       <router-view>
         <transition name="slide-left">
-          <ion-router-outlet id="main-content"></ion-router-outlet>
+          <ion-router-outlet id="main-content" :animated="false"></ion-router-outlet>
         </transition>
       </router-view>
     </IonSplitPane>
