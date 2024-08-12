@@ -102,46 +102,46 @@ export default {
         keyboardShortcuts: false,
       });
 
-      const locationButton = document.createElement('button');
+      // const locationButton = document.createElement('button');
 
-      locationButton.innerHTML = '<img width="20" src="https://img.icons8.com/ios-filled/100/define-location--v1.png" alt="define-location--v1"/>';
-      locationButton.style.padding = '10px';
-      locationButton.style.marginRight = '5px';
-      locationButton.style.backgroundColor = '#f7f3e9';
-      locationButton.style.borderRadius = '10px';
-      locationButton.style.bottom = '40px ';
+      // locationButton.innerHTML = '<img width="20" src="https://img.icons8.com/ios-filled/100/define-location--v1.png" alt="define-location--v1"/>';
+      // locationButton.style.padding = '10px';
+      // locationButton.style.marginRight = '5px';
+      // locationButton.style.backgroundColor = '#f7f3e9';
+      // locationButton.style.borderRadius = '10px';
+      // locationButton.style.bottom = '40px ';
 
-      map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
+      // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
 
-      infoWindow = new google.maps.InfoWindow();
-      // Current Location
-      locationButton.addEventListener('click', () => {
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              };
-              const marker = new google.maps.Marker({
-                position: pos,
-              });
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('Location found.');
-              infoWindow.open(map);
-              map.setCenter(pos);
-              map.setZoom(15);
-            },
-            () => {
-              handleLocationError(true, infoWindow, map.getCenter());
-            },
-          );
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-      });
+      // infoWindow = new google.maps.InfoWindow();
+      // // Current Location
+      // locationButton.addEventListener('click', () => {
+      //   // Try HTML5 geolocation.
+      //   if (navigator.geolocation) {
+      //     navigator.geolocation.getCurrentPosition(
+      //       (position) => {
+      //         const pos = {
+      //           lat: position.coords.latitude,
+      //           lng: position.coords.longitude,
+      //         };
+      //         const marker = new google.maps.Marker({
+      //           position: pos,
+      //         });
+      //         infoWindow.setPosition(pos);
+      //         infoWindow.setContent('Location found.');
+      //         infoWindow.open(map);
+      //         map.setCenter(pos);
+      //         map.setZoom(15);
+      //       },
+      //       () => {
+      //         handleLocationError(true, infoWindow, map.getCenter());
+      //       },
+      //     );
+      //   } else {
+      //     // Browser doesn't support Geolocation
+      //     handleLocationError(false, infoWindow, map.getCenter());
+      //   }
+      // });
 
       // Marker Set
       const image = '/assets/icon/pin.svg';
