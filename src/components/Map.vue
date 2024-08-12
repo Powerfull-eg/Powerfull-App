@@ -144,7 +144,7 @@ export default {
       });
 
       // Marker Set
-      const image = '/assets/icon/pin.png';
+      const image = '/assets/icon/pin.svg';
       let marker;
       JSON.parse(localStorage.shops).forEach((shop) => {
         marker = new google.maps.Marker(

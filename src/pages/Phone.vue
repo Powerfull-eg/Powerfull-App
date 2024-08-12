@@ -17,7 +17,7 @@
             <form v-if="!otpSent" id="phone-form" @submit.prevent="submitPhone()">
               <div class="form-inputs fs-6 d-flex flex-column">
                 <span class=" my-2 text-main-color font-weight-bold">{{ t('phone.Enter your phone number')}}</span>
-                <ion-input name="phone" required v-model="emailphone" autocomplete label-placement="floating"
+                <ion-input inputmode="numeric" pattern="[0-9٠-٩]*" name="phone" required v-model="emailphone" autocomplete label-placement="floating"
                   type="number" :placeholder="t('phone.Phone Number')"></ion-input>
 
                 <div class="form-submit">
@@ -38,7 +38,7 @@
             <form v-else-if="otpSent && !otpVerified" style="margin-bottom: 2rem;" id="otp" @submit.prevent="verifyOtp()">
               <div style="padding-top: 50px;" class="form-inputs fs-6 d-flex flex-column">
                 <span class="m-2">{{emailOtp ? t("phone.Enter your otp number that we sent to your email") : t("phone.Enter your otp number that we sent to your phone")}}</span>
-                <ion-input name="otp" v-model="otp" autocomplete label-placement="floating" type="number"
+                <ion-input name="otp" inputmode="numeric" pattern="[0-9٠-٩]*" v-model="otp" autocomplete label-placement="floating" type="number"
                   placeholder="OTP"></ion-input>
                 <span id="counter" class="text text-danger text-center mb-3"></span>
                 <span v-if="otpStatus != 0" :class="'otp-status text text-' + (otpStatus === 1 ? 'success' : 'danger')">{{
