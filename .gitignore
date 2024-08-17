@@ -30,7 +30,3 @@ npm-debug.log*
 /plugins
 /www
 android
-
-# .env
-# .env.production
-# .env.staging
