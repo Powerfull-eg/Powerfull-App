@@ -4,8 +4,45 @@
   <!-- Modal -->
     <div class="offcanvas offcanvas-bottom" :is-open="modalOpen" tabindex="-1" id="offcanvasMap" aria-labelledby="offcanvasBottomLabel">
       <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasBottomLabel">{{modalData.shopName}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div class="top d-flex justify-content-between w-100 pb-3">
+          <!-- shop image -->
+          <div class="shop-logo" style="flex-basis: 20%;width: 80px;height: 80px;">
+            <img src="assets/images/powericon.png" class='d-block mx-auto mb-3 w-50'>
+          </div>
+          <!-- name and summary data -->
+          <div class="shop-info" style="flex-basis: 80%;">
+            <!-- name -->
+            <div class="shop-name" style="flex-basis: 70%;display: grid;">
+              <div class="d-flex elipsis">
+                <h2 class="offcanvas-title" >{{modalData.shopName}}</h2>
+              </div>
+            </div>
+            <!-- summary data -->
+            <div class="summary d-flex flex-row">
+              <!-- distance -->
+              <div class="distance" style="padding: 0 10px 0 0;">
+                <img src="assets/icons/telegram.svg" style=" width: 20px;" alt="distance">
+                <span>1.5 km</span>
+              </div>
+              <!-- time -->
+              <div class="timing d-flex flex-row" style="padding: 0 10px 0 0;">
+                <img src="assets/icons/time.svg" style=" width: 20px;" alt="distance">
+                <span class="fs-6 font-weight-bold" style="color: #00ff00; padding: 0 10px 0 0;"> مفتوح </span>
+                <span class="fs-6" style="padding: 0 10px 0 0;">22:00 يغلق</span>
+              </div>
+              <!-- device status -->
+              <div class="device-status" style="padding: 0 10px 0 0;">
+                <div class="font-weight-bold" style="padding:3px; background-color: #8ac78a;"> 
+                  <span style="border-radius: 50%; height: 100%;" class="bg-success d-block"></span>
+                  <span style="font-size: 12px;">جاهز للإستخدام</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- close -->
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <!-- <h5 class="offcanvas-title" id="offcanvasBottomLabel">{{modalData.shopName}}</h5> -->
       </div>
       <div class="offcanvas-body small">
         <div class="status d-flex">
@@ -261,5 +298,18 @@ export default {
         padding: 1rem;
         border-radius: 30px;
         margin: 10px 0;
+    }
+    .elipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 80%;
+    }
+
+    .device-status > div {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
 </style>

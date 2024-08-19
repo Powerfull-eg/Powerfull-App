@@ -14,7 +14,7 @@ export default async function getShops() {
    const axios = require('axios');
 
     const config = {
-        method: 'post',
+        method: 'get',
         url: apiUrl,
         headers: { 
             "Accept" : "Application/json"
