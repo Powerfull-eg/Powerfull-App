@@ -113,7 +113,7 @@
         <!-- Bottom Content -->
         <div class="bottom-content">
           <!-- Batteries -->
-          <div id="batteries" class="batteries p-3">
+          <div id="batteries" class="batteries p-3 d-none">
             <div class="d-flex flex-nowrap justify-content-evenly">
               <div class="battery" v-for="i in 6" :key="i" :style="(i < 5 ? 'background: var(--background);':'')">
                 <span>&nbsp;</span>
@@ -137,6 +137,47 @@
               </div>
             </div>
           </div>
+          <!-- Menus -->
+          <div id="menus" class="menus p-3 d-flex flex-row flex-nowrap" style="display: none !important">
+            <div @click="viewMenu" class="menu-image" v-for="i in 3" :key="i">
+              <img :src="'assets/images/'+i+'.jpg'" alt="menu image">
+            </div>
+          </div>
+          <!-- Rates -->
+          <div id="rates" class="rates">
+            <div class="rating-navs fw-bold">
+              <div class="body-middle d-flex justify-content-between w-75 mx-auto p-3">
+                <!-- comment button -->
+                <div class="comment-btn d-flex">
+                  <img src="assets/icons/telegram.svg" alt="comment icon">
+                  <span>إضافة تعليق</span>
+                </div>
+                <!-- react button -->
+                <div class="react-btn d-flex">
+                  <img src="assets/icons/telegram.svg" alt="react icon">
+                  <span>إضافة تفاعل</span>
+                </div>
+              </div>
+            </div>
+            <div class="comments d-flex flex-column justify-content-center" style="overflow: scroll">
+              <div class="comment p-3" v-for="i in 5" :key="i">
+                <div class="d-flex justify-content-between">
+                  <div class="user-name">
+                    <img src="assets/images/logo.png" style="width:20px">
+                    <span>محمد محمود</span>
+                  </div>
+                  <div class="user-rate">
+                    <img src="assets/images/logo.png" style="width:20px">
+                    <span>4.5</span>
+                  </div>
+                </div>
+                <div class="comment-text">
+                  <span>لوريم ايبسوم هو نموذج افتراضي يوضع في التصاميم للنصي</span>
+                </div>
+                <hr v-if="i !== 5">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -146,6 +187,7 @@
 <!-- init map  -->
 <script>
 import { navigateCircleSharp } from 'ionicons/icons';
+import Viewer from 'viewerjs';
 import * as bootstrap from 'bootstrap';
 import {
   IonButtons, IonButton, IonModal, IonHeader, IonToolbar, IonContent, IonTitle, IonIcon,
@@ -170,6 +212,11 @@ export default {
     IonIcon,
   },
   setup() {
+    const viewMenu = () => {
+      const gallery = new Viewer(document.getElementById('menus'));
+      gallery.show();
+    }
+    
     // Modal functions
     const modalOpen = ref(false);
     const modalData = ref({});
@@ -299,12 +346,14 @@ export default {
     // Initialize Map
     initMap();
 
+
     return {
       modalOpen,
       modalData,
       setModalOpen,
       Icons,
-      openScanner
+      openScanner,
+      viewMenu,
     };
   },
 };
@@ -443,6 +492,18 @@ export default {
       text-align: center;
       background: var(--color);
       margin: 0 auto;
+    }
+    .menu-image {
+      width: 10rem;
+      max-width: 7rem;
+      padding: 0 5px;
+    }
+    .img-thumbnail {
+  width: 100px;
+  margin: 5px;
+}
+    .menu-image img {
+      height: 100%;
     }
     @media (min-width: 768px) {
     .summary {
