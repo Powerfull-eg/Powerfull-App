@@ -131,6 +131,12 @@ const routes = [
     component: () => import('../pages/Logout.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/saved',
+    name: 'Saved',
+    component: () => import('../pages/Saved.vue'),
+    meta: { requiresAuth: true }
+  },
 ]
 
 export default routes;

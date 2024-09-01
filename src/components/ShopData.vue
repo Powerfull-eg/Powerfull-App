@@ -90,9 +90,9 @@
                 </a>
             </div>          
             <!-- Save shop -->
-            <div class="save d-flex" @click.prevent="saveShop()">
-                <img :src="modalData?.is_saved ? 'assets/icons/mark-saved.png':'assets/icons/mark.png'" alt="distance">
-                <span :style="modalData?.is_saved ? 'color: var(--background)':''">حفظ</span>
+            <div class="save d-flex d-none" @click.prevent="saveShop()">
+                <img :test="!isShopSaved" :src="!isShopSaved ? 'assets/icons/mark-saved.png':'assets/icons/mark.png'" alt="distance">
+                <span :style="!isShopSaved ? 'color: var(--background)':''">حفظ</span>
             </div>
         </div>
         <!-- Body bottom Part -->
@@ -179,12 +179,13 @@ export default {
         Rates
     },
     setup(props) {
+        const isShopSaved = ref(false);
+
         onMounted(() =>{
+            isSaved();
         });
 
         onUpdated(() => {
-            isSaved();
-
             const targets = document.querySelectorAll('.target');
             const target = document.querySelector('.menu-nav').getAttribute('data-target');
             const targetsNavs = document.querySelectorAll('[data-target]');
@@ -197,7 +198,6 @@ export default {
                 }            
             }
         })
-        
         const viewMenu = () => {
             const gallery = new Viewer(document.getElementById('menus'));
             gallery.show(true);
@@ -335,26 +335,6 @@ export default {
             return props.modalData?.menu?.length > 0 ? props.modalData?.menu : null;
         }
 
-        // Check if shop is saved
-        const isSaved = async () => {
-            const loggeduser = localStorage?.token ?? null;
-            if(!loggeduser) { return; }
-            
-            // send axios request
-            axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
-            const url = `${process.env.VUE_APP_API_URL}/api/operations/shops/check-save`;
-            let isSaved;
-            await axios.post(url,{shop_id: props.modalData.id})
-            .then((res) => {
-                return isSaved = res.data.isSaved
-            })
-            .catch((err) => {
-                return;
-            });
-
-            return isSaved;
-        }
-
         // save shop
         const { openToast } = useToast();
         const saveShop = async () => {
@@ -371,18 +351,40 @@ export default {
             // send axios request
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
             const url = `${process.env.VUE_APP_API_URL}/api/operations/shops/save`;
-            props.modalData.is_saved = await isSaved();
+            await isSaved();
             
             await axios.post(url,{shop_id: props.modalData.id})
             .then((res) => {
-                openToast(props.modalData.is_saved ? "تم إلغاء حفظ المكان" : "تم حفظ المكان", 'success', 'bottom');
-                props.modalData.is_saved = !props.modalData.is_saved ? res.data : null;
+                openToast(isShopSaved.value ? "تم إلغاء حفظ المكان" : "تم حفظ المكان", 'success', 'bottom');
+                const savedShops = res.data;
+                isShopSaved.value = savedShops.includes(props.modalData.id) ? true : false;
+                // !isShopSaved.value ? isShopSaved(true) : null;
             })
             .catch((err) => {
-                openToast(props.modalData.is_saved ? "فشل إلغاء حفظ المكان" : "فشل حفظ المكان", 'danger', 'bottom');
+                openToast(isShopSaved.value ? "فشل إلغاء حفظ المكان" : "فشل حفظ المكان", 'danger', 'bottom');
             });
             spinner.remove();
             document.querySelector('div.save').appendChild(clone);
+        }
+
+                // Check if shop is saved
+        const isSaved = async () => {
+            // Check if user is logged in
+            const loggeduser = localStorage?.token ?? null;
+            if(!loggeduser) { return; }
+            
+            // send axios request
+            axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
+            const url = `${process.env.VUE_APP_API_URL}/api/operations/shops/check-save`;
+            await axios.post(url,{shop_id: props.modalData.id})
+            .then((res) => {
+                isShopSaved.value = res.data.includes(props.modalData.id) ? true : false;
+            })
+            .catch((err) => {
+                // isShopSaved.value = false;
+            });
+            document.querySelector('div.save').classList.remove('d-none');
+            return isShopSaved.value;
         }
 
         return { 
@@ -397,7 +399,8 @@ export default {
             menu,
             saveShop,
             viewMenu,
-            lang
+            lang,
+            isShopSaved
         };
     }
 }
@@ -448,6 +451,7 @@ export default {
     color: #474747;
     flex-basis: 30%;
     align-items: center;
+    padding: 0 6px;
     }
     .body-top  > div > div > span:first-of-type,.body-middle {
       font-weight: 900;

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-header class="theIonHeader" v-if="mapHeader"
-      style="background-color: var(--background); height: 15rem; position: absolute; top:0; left: 0;display: flex; flex-direction: column;">
+      style="background-color: var(--background); height: 12rem; position: absolute; top:0; left: 0;display: flex; flex-direction: column;">
       <div class="d-flex justify-content-between align-items-center my-3">
         <ion-menu-button :color="'#f27920'"
           style="position: fixed;color: #fff; z-index: 100;font-size: 2.7rem;  padding: 5px; border-radius: 50%;"
@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="SearchInput d-flex justify-content-center">
+      <!-- <div class="SearchInput d-flex justify-content-center">
         <div style="position: relative;width: 80%;margin-top: 20px; height: 20px;">
           <input v-on:input="searchForShop(serachCallback)" id="searchInput" class="searchBar h-100" type="search"
             placeholder=''>
@@ -26,7 +26,7 @@
           <ion-icon class="searchIcon" name="search-sharp"></ion-icon>
           <ion-icon name="close" @click="emptySearch" style="display: none; font-size: 20px;"></ion-icon>
         </div>
-      </div>
+      </div> -->
     </ion-header>
     <ion-menu-button :color="'#f27920'" v-if="hideHeader && !hideMenuBtn && !mapHeader"
       style="position: fixed;color: #f27920; z-index: 100;background-color: #fff;  padding: 5px;font-size: 2.8rem"
@@ -139,6 +139,7 @@ export default {
     const Icons = { chevronBackOutline };
     const modalData = ref({});
     const { t } = useI18n();
+
     const serachCallback = (shop) => {
       const offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasMap'));
       offcanvas.show();
@@ -164,6 +165,7 @@ export default {
       document.querySelector('#dropdown').style.display = 'none';
       document.querySelector("ion-icon[name='close']").style.display = 'none';
     };
+
     const lang = localStorage.locale;
     return {
       router,
@@ -186,8 +188,8 @@ export default {
 <style scoped>
 /* var(--ion-background-color,#f27920) */
 .theIonHeader::after {
-  width: 100px;
-  height: 100px;
+  width: 125px;
+  height: 125px;
   clip-path: polygon(0 0, 0% 100%, 100% 100%);
   content: "";
   background: var(--background);

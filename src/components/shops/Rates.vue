@@ -22,7 +22,7 @@
                 <span>{{rate.user_name}}</span>
             </div>
             <div class="user-rate">
-                <img src="assets/images/logo.png" style="width:20px">
+                <img src="assets/icons/star.png" style="width:20px">
                 <span>{{rate.rate}}</span>
             </div>
         </div>
@@ -194,6 +194,7 @@ export default {
                 data.rate = formData.get('rating');
             }else{
                 data.reaction = formData.get('reaction');
+                console.log("197 "+data.reaction);
                 checkedReact.value = data.reaction;
             }
 
