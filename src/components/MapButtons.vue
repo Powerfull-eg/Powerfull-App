@@ -1,13 +1,10 @@
 <template>
     <div class="buttons-container container w-100 ">
         <router-link class="position-absolute" style="top: 15rem;"  :to="{ name: 'Saved' }">
-            <img  src="assets/icons/mark.png" alt="">
+            <img  src="assets/icons/map-mark.png" alt="">
         </router-link>
-        <router-link class="position-absolute" style="top: 18rem;"  :to="{ name: 'Wallet' }">
-            <img  src="assets/icons/mark.png" alt="">
-        </router-link>
-        <router-link class="position-absolute" style="bottom: 10rem;"  :to="{ name: 'Wallet' }">
-            <img  src="assets/icons/mark.png" alt="">
+        <router-link class="position-absolute" style="top: 20rem;"  :to="{ name: 'locations' }">
+            <img  src="assets/icons/map-search.png" alt="">
         </router-link>
     </div>
 </template>
@@ -33,8 +30,8 @@ export default {
     right: 10px;
 }
 .buttons-container a img{
-    width: 20px;
+    width: 50px;
     background: #8080807d;
-    padding: 10px;
+    padding: 0;
 }
 </style>

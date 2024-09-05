@@ -10,7 +10,7 @@ export default async function getShops() {
         return;
     }
 
-   const apiUrl = `${process.env.VUE_APP_API_URL}/api/shops`;
+   const apiUrl = `${process.env.VUE_APP_API_URL}/api/shops/new`;
    const axios = require('axios');
 
     const config = {

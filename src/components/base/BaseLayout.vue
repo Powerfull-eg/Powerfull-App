@@ -9,7 +9,7 @@
         <div class="icon-container"> <img style="width:150px;" src="/assets/images/white-logo.png" alt="Powerfull" />
         </div>
         <div @click="router.push('/profile')"
-          class="text-start me-1 d-flex flex-column justify-content-start align-items-start " style=" font-weight: 600; padding-right: 1rem;">
+          class="text-start me-1 d-flex flex-column justify-content-start align-items-start " style=" font-weight: 600;">
           <img :src="userData && userData.photo != '' ? userData.photo : '/assets/icons/avatar.png'"
             class="img-fluid bg-white d-block "
             style="border: 2px solid;border-color: var(--background); border-radius: 50%; width: 3rem;" alt="User Image">

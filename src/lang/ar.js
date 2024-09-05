@@ -98,6 +98,8 @@ export default {
     "Send Your Message":"أرسل رسالتك",
     "Under Maintenance": "تحت الصيانة",
     "App is not available at the moment": "التطبيق غير متوفر حاليا",
+    "Not Available": "غير متوفر",
+    "Not Defined": "غير محدد",
     // Settings
     settings : {
         "Profile":"الملف الشخصي",

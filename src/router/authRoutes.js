@@ -126,15 +126,15 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/logout',
-    name: 'logout',
-    component: () => import('../pages/Logout.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/saved',
     name: 'Saved',
     component: () => import('../pages/Saved.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: () => import('../pages/Logout.vue'),
     meta: { requiresAuth: true }
   },
 ]

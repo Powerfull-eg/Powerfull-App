@@ -97,6 +97,8 @@ export default {
     "Send Your Message":"Send Your Message",
     "Under Maintenance": "Under Maintenance",
     "App is not available at the moment": "App is not available at the moment",
+    "Not Available": "Not Available",
+    "Not Defined": "Not Defined",
     "settings": {
         "Profile": "Profile",
         "Gifts": "Gifts",
@@ -163,5 +165,18 @@ export default {
         "You will not be able to see our campaigns":"You will not be able to see our campaigns",
         "Back to login":"Back to login",
         "Continue as guest":"Continue as guest"
+    },
+    "shop": {
+        "Open": "Open",
+        "Close": "Close",
+        "Closes": "Closes at",
+        "Opens": "Opens at",
+        "Ready": "Ready For Use",
+        "Not-Ready": "Not Ready For Use",
+        "access": "Access Control",
+        "type": "Type",
+        "price": "Price",
+        "Location":"Location",
+        "save": "Save",
     }
 }

@@ -22,6 +22,9 @@
                 <span>{{rate.user_name}}</span>
             </div>
             <div class="user-rate">
+                <div class="reaction d-inline-block px-3" v-if="data?.reactions?.length > 0" v-for="reaction in data?.reactions" :key="reaction.user_id">
+                    <span v-if="reaction.user_id == rate.user_id">{{ getReactionEmojie(reaction.reaction) }}</span>
+                </div>
                 <img src="assets/icons/star.png" style="width:20px">
                 <span>{{rate.rate}}</span>
             </div>
@@ -62,7 +65,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="mt-0"> 
-                        <button type="submit" class="btn btn-info px-4 mx-3 py-1 rating-submit">تأكيد</button> 
+                        <button type="submit" class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">تأكيد</button> 
                         <button type="button" class="btn" data-bs-dismiss="modal">إغلاق</button>
                     </div>
                 </div>
@@ -114,7 +117,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="mt-0"> 
-                        <button class="btn btn-info px-4 mx-3 py-1 rating-submit">تأكيد</button> 
+                        <button class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">تأكيد</button> 
                         <button type="button" class="btn" data-bs-dismiss="modal">إغلاق</button>
                     </div>
                 </div>
@@ -218,10 +221,16 @@ export default {
             });
         }
 
+        const getReactionEmojie = (reaction) => {
+            const parent = document.querySelector(".reaction-container");
+            const reactionText = parent.querySelector("label[for=reaction-" + reaction + "]");
+            return reactionText.textContent;
+        }
         return {
             addCommentOrReact,
             submitCommentOrReact,
-            checkedReact
+            checkedReact,
+            getReactionEmojie
         }
     }
 }

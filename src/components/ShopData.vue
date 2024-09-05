@@ -4,7 +4,7 @@
         <div class="top d-flex justify-content-between w-100 pb-3">
             <!-- shop image -->
             <div class="shop-logo" style="flex-basis: 20%; width: 100%; position: relative">
-            <img :src="modalData?.data?.logo ?? 'assets/images/powericon.png'" style="position: absolute; object-fit: contain; top: 10%; width: 75%; height: 75%;">
+                <img :src="modalData?.data?.logo ?? ( modalData?.logo ?? 'assets/images/powericon.png')" style="position: absolute; object-fit: contain; top: 10%; width: 75%; height: 75%;">
             </div>
             <!-- name and summary data -->
             <div class="shop-info" style="flex-basis: 100%;">
@@ -25,19 +25,19 @@
                 <!-- time -->
                 <div class="timing d-flex flex-row" v-if="isShopOpen() !== null" style="padding: 0 5px 0 0;">
                     <img src="assets/icons/time.svg" style=" width: 1rem;" alt="distance">
-                    <span class="font-weight-bold" v-if="isShopOpen() === true" style="color: #00ff00; padding: 0 5px 0 0;"> مفتوح</span>
-                    <span class="font-weight-bold" v-else style="color: #ff0000; padding: 0 5px 0 0;"> مغلق</span>
-                    <span v-if="modalData?.data?.closes_at">{{modalData?.data?.closes_at}} يغلق</span>
+                    <span class="font-weight-bold" v-if="isShopOpen() === true" style="color: #00ff00; padding: 0 5px 0 0;"> {{ t('shop.Open') }}</span>
+                    <span class="font-weight-bold" v-else style="color: #ff0000; padding: 0 5px 0 0;"> {{ t('shop.Closed') }}</span>
+                    <span v-if="modalData?.data?.closes_at">{{convertTo12Hour(modalData?.data?.closes_at)}} {{ t("shop.Closes") }}</span>
                 </div>
                 <!-- device status -->
                 <div class="device-status" v-if="isDeviceOnline() !== null">
-                    <div v-if="isDeviceOnline()" class="font-weight-bold" style="padding:3px; background-color: #8ac78a; display: flex;"> 
+                    <div v-if="isDeviceOnline()" class="font-weight-bold" style="padding:3px; background-color: #8ac78a; display: flex; width: 100%;"> 
                         <span style="border-radius:50%;width: 15px;display: block;margin-right: 3px; background-color: #004324;"></span>
-                        <span>جاهز للإستخدام</span>
+                        <span style="font-size: 8px;">{{ t('shop.Ready') }}</span>
                     </div>
                     <div v-else class="font-weight-bold" style="padding:3px; background-color: #fff; border: 1px solid; display: flex;"> 
                         <span style="border-radius:50%;width: 15px;display: block;margin-right: 3px; background-color: #ff0000;"></span>
-                        <span>الجهاز مغلق</span>
+                        <span>{{ t('shop.Not-Ready') }}</span>
                     </div>
                 </div>
             </div>
@@ -54,23 +54,23 @@
 
             <img style="width: 30px; height: 30px;" :src="modalData?.data?.type && modalData?.data?.type?.access_icon ? modalData?.data?.type?.access_icon : 'assets/icons/group.png'" alt="distance">
             <div class="d-flex flex-column">
-                <span>صلاحية الوصول</span>
-                <span>{{ modalData?.data?.type ? (lang == 'ar' ? modalData?.data?.type?.access_ar_name : modalData?.data?.type?.access_en_name) : 'غير محدد' }}</span>
+                <span>{{t('shop.access')}}</span>
+                <span>{{ modalData?.data?.type ? (lang == 'ar' ? modalData?.data?.type?.access_ar_name : modalData?.data?.type?.access_en_name) : t('Not Defined') }}</span>
             </div>
             </div>
             <!-- Type -->
             <div class="type d-flex">
             <img style="width: 30px; height: 30px;" :src="modalData?.data?.type && modalData?.data?.type?.type_icon ? modalData?.data?.type?.type_icon : 'assets/icons/cart.png'" alt="distance">
             <div class="d-flex flex-column">
-                <span>النوع</span>
-                <span>{{ modalData?.data?.type ? (lang == 'ar' ? modalData?.data?.type?.type_ar_name : modalData?.data?.type?.type_en_name) : 'غير محدد' }}</span>
+                <span>{{t('shop.type')}}</span>
+                <span>{{ modalData?.data?.type ? (lang == 'ar' ? modalData?.data?.type?.type_ar_name : modalData?.data?.type?.type_en_name) : t('Not Defined') }}</span>
             </div>
             </div>
             <!-- Price -->
             <div class="price d-flex">
             <img src="assets/icons/dollar.png" alt="distance">
                 <div class="d-flex flex-column">
-                    <span>السعر</span>
+                    <span>{{t('shop.price')}}</span>
                     <span>{{ price() }}</span>
                 </div>
             </div>
@@ -80,19 +80,19 @@
             <!-- qr scan button -->
             <div @click="openScanner" class="qr-scan d-flex">
             <img src="assets/icons/qr-code.png" alt="distance">
-            <span>امسح رمز الإستجابة</span>
+            <span>{{ t('Scan') }}</span>
             </div>
             <!-- location btn -->
             <div class="location d-flex" >
                 <a target="_blank" :href="mapsUrl()" class="mapsBtn">
                     <img src="assets/icons/location.png" alt="distance">
-                    <span>الموقع</span>
+                    <span>{{ t('shop.Location') }}</span>
                 </a>
             </div>          
             <!-- Save shop -->
             <div class="save d-flex d-none" @click.prevent="saveShop()">
                 <img :test="!isShopSaved" :src="!isShopSaved ? 'assets/icons/mark-saved.png':'assets/icons/mark.png'" alt="distance">
-                <span :style="!isShopSaved ? 'color: var(--background)':''">حفظ</span>
+                <span :style="!isShopSaved ? 'color: var(--background)':''">{{t('shop.Save')}}</span>
             </div>
         </div>
         <!-- Body bottom Part -->
@@ -100,13 +100,13 @@
             <!-- Navigator -->
             <div class="navs d-flex justify-content-between align-items-center mx-auto px-3">
                 <!-- battery-nav -->
-                <div class="battery-nav" @click="switchView($event)" data-target="batteries">
+                <div class="battery-nav selected" @click="switchView($event)" data-target="batteries">
                     <span>البطارية</span>
                     &nbsp;
                     <span class="battery-live" style="background-color: var(--background); padding: 0 4px; color: var(--color);">{{battery().busy}}</span>
                 </div>
                 <!-- menu-nav -->
-                <div class="menu-nav selected" @click="switchView($event)" data-target="menus">
+                <div class="menu-nav" @click="switchView($event)" data-target="menus">
                     <span>المنيو&الخصومات</span>
                 </div>          
                 <!-- rate-nav -->
@@ -118,7 +118,7 @@
         <!-- Bottom Content -->
         <div class="bottom-content">
             <!-- Batteries -->
-            <div id="batteries" class="batteries p-3 target" v-if="battery().busy" style="display: none;">
+            <div id="batteries" class="batteries p-3 target" v-if="battery().busy">
                 <div class="d-flex flex-nowrap justify-content-evenly">
                     <div class="battery" v-for="i in battery().total" :key="i" :style="(i < battery().busy +1 ? 'background: var(--background);':'')">
                     <span>&nbsp;</span>
@@ -143,15 +143,20 @@
                 </div>
             </div>
 
-            <div id="batteries" class="batteries p-3 text-center target" v-else style="display: none;">
+            <div id="batteries" class="batteries p-3 text-center target" v-else>
                 <div v-if="isDeviceOnline() === false || isDeviceOnline() === null || isShopOpen() === false || isShopOpen() === null">الجهاز لايعمل</div>
                 <div v-else-if="battery().busy < 1">لا يوجد بطاريات</div>
             </div>
             <!-- Menus -->
-            <div id="menus" class="menus target">
+            <div id="menus" class="menus target"  style="display: none;">
                 <div class="menus p-3 d-flex flex-row flex-nowrap" v-if="menu() !== null">
-                    <div @click="viewMenu" class="menu-image" v-for="i in menu()" :key="i">
+                    <div @click="viewMenu" v-if="galleryloaded" class="menu-image" v-for="i in menu()" :key="i">
                         <img :src="i.image" alt="menu image">
+                    </div>
+                    <div v-else class="d-flex justify-content-center w-100 text-center mt-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">{{t('Loading...')}}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center" v-else>لا يوجد عروض متاح حاليا</div>
@@ -180,14 +185,14 @@ export default {
     },
     setup(props) {
         const isShopSaved = ref(false);
-
         onMounted(() =>{
             isSaved();
+            loadImages(4000);
         });
 
         onUpdated(() => {
             const targets = document.querySelectorAll('.target');
-            const target = document.querySelector('.menu-nav').getAttribute('data-target');
+            const target = document.querySelector('.battery-nav').getAttribute('data-target');
             const targetsNavs = document.querySelectorAll('[data-target]');
             for (let i = 0; i < targets.length; i++) {
                 targets[i].id === target ? targets[i].style.display = 'block' : targets[i].style.display = 'none';
@@ -308,8 +313,8 @@ export default {
         }
 
         // Handle Prices
-        const { t } = useI18n();
         const lang = localStorage.locale;
+        const { t } = useI18n();
         const price = () => {
             console.log(props.modalData);
             const prices = props.modalData?.data?.price ?? ( lang === 'ar' ? JSON.parse(localStorage.prices)[0][0] : JSON.parse(localStorage.prices)[0][3]);
@@ -387,6 +392,18 @@ export default {
             return isShopSaved.value;
         }
 
+        function convertTo12Hour(time) {
+            let [hours, minutes] = time.split(':').map(Number);
+            let period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+
+            return formattedTime;
+        }
+
+        const galleryloaded = ref(false);
+        const loadImages = (time) => { setTimeout(() => { galleryloaded.value = true; }, time); }
+
         return { 
             switchView,
             getUserDistance,
@@ -400,7 +417,11 @@ export default {
             saveShop,
             viewMenu,
             lang,
-            isShopSaved
+            t,
+            isShopSaved,
+            convertTo12Hour,
+            galleryloaded,
+            t
         };
     }
 }
@@ -515,7 +536,7 @@ export default {
         margin: 5px;
         }
     .menu-image img {
-      height: 100%;
+        max-height: 200px;
     }
     @media (min-width: 768px) {
     .summary {
