@@ -90,9 +90,9 @@
                 </a>
             </div>          
             <!-- Save shop -->
-            <div class="save d-flex d-none" @click.prevent="saveShop()">
+            <div class="save d-flex" @click.prevent="saveShop()">
                 <img :test="!isShopSaved" :src="!isShopSaved ? 'assets/icons/mark-saved.png':'assets/icons/mark.png'" alt="distance">
-                <span :style="!isShopSaved ? 'color: var(--background)':''">{{t('shop.Save')}}</span>
+                <span :style="!isShopSaved ? 'color: var(--background)':''">{{t('shop.save')}}</span>
             </div>
         </div>
         <!-- Body bottom Part -->
@@ -101,17 +101,17 @@
             <div class="navs d-flex justify-content-between align-items-center mx-auto px-3">
                 <!-- battery-nav -->
                 <div class="battery-nav selected" @click="switchView($event)" data-target="batteries">
-                    <span>البطارية</span>
+                    <span>{{t('shop.battery')}}</span>
                     &nbsp;
                     <span class="battery-live" style="background-color: var(--background); padding: 0 4px; color: var(--color);">{{battery().busy}}</span>
                 </div>
                 <!-- menu-nav -->
                 <div class="menu-nav" @click="switchView($event)" data-target="menus">
-                    <span>المنيو&الخصومات</span>
+                    <span>{{t('shop.Menu & Discounts')}}</span>
                 </div>          
                 <!-- rate-nav -->
                 <div class="rate-nav" @click="switchView($event)" data-target="rates">
-                    <span>التقييم</span>
+                    <span>{{t('shop.rates')}}</span>
                 </div>
             </div>
         </div>
@@ -129,23 +129,47 @@
                     <!-- Filled Batteries -->
                     <div class="filled-batteries d-flex align-items-center justify-content-center">
                     <img src="assets/icons/full-battery.png" style="width: 2rem;" alt="Filled Battery">
-                    <span>المنافذ الممتلئة</span>
+                    <span>{{t('shop.full-slots')}}</span>
                     <span style="color: var(--background);color: var(--background);font-size: 2rem;padding: 0 3px;margin-top: -10px;"> . </span>
                     <span>{{battery().busy}}</span>
                     </div>
                     <!-- Empty Batteries -->
                     <div class="empty-batteries d-flex align-items-center justify-content-center">
                     <img src="assets/icons/empty-battery.png" style="width: 2rem;" alt="Empty Battery">
-                    <span>المنافذ الفارغة</span>
+                    <span>{{t('shop.empty-slots')}}</span>
                     <span style="color: var(--background);color: var(--background);font-size: 2rem;padding: 0 3px;margin-top: -10px;"> . </span>
                     <span>{{battery().empty}}</span>
                     </div>
                 </div>
             </div>
 
-            <div id="batteries" class="batteries p-3 text-center target" v-else>
-                <div v-if="isDeviceOnline() === false || isDeviceOnline() === null || isShopOpen() === false || isShopOpen() === null">الجهاز لايعمل</div>
-                <div v-else-if="battery().busy < 1">لا يوجد بطاريات</div>
+            <div id="batteries" class="batteriestext-center target" v-else>
+                <div v-if="(isDeviceOnline() === false || isDeviceOnline() === null || isShopOpen() === false || isShopOpen() === null) || battery().busy < 1">
+                    <div id="batteries" class="batteries p-3 target">
+                        <div class="d-flex flex-nowrap justify-content-evenly">
+                            <div class="battery" v-for="i in modalData?.device?.slots ?? 6" :key="i" >
+                                <span>&nbsp;</span>
+                            </div>
+                         </div>
+                        <!-- Batteries Data-->
+                        <div class="batteries-data d-flex justify-content-between w-100 pt-3">
+                            <!-- Filled Batteries -->
+                            <div class="filled-batteries d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/full-battery.png" style="width: 2rem;" alt="Filled Battery">
+                            <span>{{t('shop.full-slots')}}</span>
+                            <span style="color: var(--background);color: var(--background);font-size: 2rem;padding: 0 3px;margin-top: -10px;"> . </span>
+                            <span>0</span>
+                            </div>
+                            <!-- Empty Batteries -->
+                            <div class="empty-batteries d-flex align-items-center justify-content-center">
+                            <img src="assets/icons/empty-battery.png" style="width: 2rem;" alt="Empty Battery">
+                            <span>{{t('shop.empty-slots')}}</span>
+                            <span style="color: var(--background);color: var(--background);font-size: 2rem;padding: 0 3px;margin-top: -10px;"> . </span>
+                            <span class="test">{{modalData?.device?.slots ?? 6}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- Menus -->
             <div id="menus" class="menus target"  style="display: none;">
@@ -159,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center" v-else>لا يوجد عروض متاح حاليا</div>
+                <div class="text-center mt-2" v-else>{{t('shop.no offers')}}</div>
             </div>
             <!-- Rates -->
             <div id="rates" class="rates target" style="display: none;">
@@ -317,7 +341,7 @@ export default {
         const { t } = useI18n();
         const price = () => {
             console.log(props.modalData);
-            const prices = props.modalData?.data?.price ?? ( lang === 'ar' ? JSON.parse(localStorage.prices)[0][0] : JSON.parse(localStorage.prices)[0][3]);
+            const prices = props.modalData?.data?.price ?? ( lang === 'ar' ? JSON.parse(localStorage.prices)[0][1] : JSON.parse(localStorage.prices)[0][2]);
             return prices;
         }
 
@@ -344,14 +368,7 @@ export default {
         const { openToast } = useToast();
         const saveShop = async () => {
             const loggeduser = localStorage?.token ?? null;
-            if(!loggeduser) { return openToast("يجب تسجيل الدخول أولا", 'danger', 'bottom') };
-            
-            // convert span to loader
-            let text = document.querySelector('div.save > span');
-            let clone = text.cloneNode(true);
-            text.remove();
-            document.querySelector('div.save').innerHTML += '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-            let spinner = document.querySelector('div.save > span[role="status"]');
+            if(!loggeduser) { return openToast( t('validation.You should login first'), 'danger', 'bottom') };
             
             // send axios request
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
@@ -360,16 +377,14 @@ export default {
             
             await axios.post(url,{shop_id: props.modalData.id})
             .then((res) => {
-                openToast(isShopSaved.value ? "تم إلغاء حفظ المكان" : "تم حفظ المكان", 'success', 'bottom');
+                openToast(isShopSaved.value ? t('shop.shop-removed-from-saved') : t('shop.shop-saved-successfully'), 'success', 'bottom');
                 const savedShops = res.data;
                 isShopSaved.value = savedShops.includes(props.modalData.id) ? true : false;
                 // !isShopSaved.value ? isShopSaved(true) : null;
             })
             .catch((err) => {
-                openToast(isShopSaved.value ? "فشل إلغاء حفظ المكان" : "فشل حفظ المكان", 'danger', 'bottom');
+                openToast(isShopSaved.value ? t('shop.cant-remove-shop-from-saved') : t('shop.cant-save-shop'), 'danger', 'bottom');
             });
-            spinner.remove();
-            document.querySelector('div.save').appendChild(clone);
         }
 
                 // Check if shop is saved
@@ -544,6 +559,10 @@ export default {
     }
     .summary img {
       width: 2rem !important;
+    }
+
+    * {
+      font-family: "abdo-master";
     }
 }
 

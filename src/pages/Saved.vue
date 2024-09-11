@@ -10,7 +10,7 @@
                             <div style="color: var(--background); font-size: 12px;">{{ shop?.shop?.address ?? '' }}</div>
                         </div>
                     </div>
-                    <div> <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + shop?.shop?.location" class="mapsBtn">Google Maps</a></div>
+                    <div> <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + shop?.shop?.location" class="mapsBtn">{{ t("Google Maps") }}</a></div>
                 </div>
             </div>
             <div v-else class="mt-5 mx-auto text-center">
@@ -21,7 +21,7 @@
         </div>
         <div v-else class="d-flex justify-content-center mt-5">
             <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{t("Loading")}}...</span>
             </div>
         </div>
     </base-layout>

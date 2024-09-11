@@ -67,6 +67,10 @@ export default defineComponent({
     const settings = ref(store.getters["settings/settings"]);
     let offcanvas;
     
+    // Add new font on arabic
+    if(localStorage?.locale == "ar"){
+      document.querySelector("body").style.fontFamily = "abdo-master ,bahij, serif";
+    }
     onMounted(() => {
       console.log(settings.value);
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasApp'));
@@ -96,6 +100,7 @@ export default defineComponent({
             offcanvas.show();
           }
         }, 3000);
+      // });
       },3000);
     });
 

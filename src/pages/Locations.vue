@@ -9,12 +9,12 @@
                     <div style="color: var(--background); font-size: 12px;">{{ shop?.address ?? '' }}</div>
                 </div>
             </div>
-            <div> <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + (shop?.location ?? '')" class="mapsBtn">Google Maps</a></div>
+            <div> <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + (shop?.location ?? '')" class="mapsBtn">{{t("Google Maps")}}</a></div>
         </div>
     </div>
     <div v-else class="mt-5 mx-auto">
       <img width="50" src="/assets/icons/no-content.png" alt="No Content">
-      <h4 style="font-weight: 600; margin: 20px;"> No Locations Available</h4>
+      <h4 style="font-weight: 600; margin: 20px;">{{t('No Locations Available')}}</h4>
     </div>
 </base-layout>
 </template>

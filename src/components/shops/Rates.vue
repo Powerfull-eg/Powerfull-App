@@ -4,12 +4,12 @@
             <!-- react button -->
             <div @click.prevent="addCommentOrReact('react')" class="react-btn d-flex">
                 <img src="assets/icons/like.png" alt="react icon">
-                <span>إضافة تفاعل</span>
+                <span>{{t('shop.add-react')}}</span>
             </div>
             <!-- comment button -->
             <div @click.prevent="addCommentOrReact()" class="comment-btn d-flex">
                 <img src="assets/icons/comment.png" alt="comment icon">
-                <span>إضافة تعليق</span>
+                <span>{{t('shop.add-comment')}}</span>
             </div>
         </div>
     </div>
@@ -30,11 +30,11 @@
             </div>
         </div>
         <div class="comment-text">
-            <span class="d-block text-center fs-6">{{rate.comment ?? 'لا يوجد تعليق' }}</span>
+            <span class="d-block text-center fs-6">{{rate.comment ?? t('shop.no-comment') }}</span>
     </div>
     </div>
         <div class="text-center comment p-3" v-else>
-            <span>لا يوجد تعليقات أو تقييمات</span>
+            <span>{{ t('shop.no-comments-rates')  }}</span>
         </div>
     </div>
 
@@ -44,7 +44,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header text-right">
-                <h5 class="modal-title">إضافة تعليق</h5>
+                <h5 class="modal-title">{{t('shop.add-comment')}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" @submit.prevent="submitCommentOrReact('comment',$event)">
@@ -53,20 +53,20 @@
                     <div class="mb-3">
                         <div class=" d-flex justify-content-center mt-2">
                             <div class="text-center">
-                                <span>التقييم</span>
+                                <span>{{t('shop.rate')}}</span>
                                 <div class="rating"> <input type="radio" name="rating" id="rating-5" value="5"><label for="rating-5">☆</label> <input type="radio" name="rating" id="rating-4" value="4"><label for="rating-4">☆</label> <input type="radio" name="rating" id="rating-3" value="3"><label for="rating-3">☆</label> <input type="radio" name="rating" id="rating-2" value="2"><label for="rating-2">☆</label> <input type="radio" name="rating" id="rating-1" value="1"><label for="rating-1">☆</label> </div>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">التعليق</label>
+                        <label for="exampleFormControlTextarea1" class="form-label">{{t('shop.comment')}}</label>
                         <textarea class="form-control" maxlength="200" name="comment" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="mt-0"> 
-                        <button type="submit" class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">تأكيد</button> 
-                        <button type="button" class="btn" data-bs-dismiss="modal">إغلاق</button>
+                        <button type="submit" class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">{{t('Confirm')}}</button> 
+                        <button type="button" class="btn" data-bs-dismiss="modal">{{t('Cancel')}}</button>
                     </div>
                 </div>
             </form>
@@ -78,7 +78,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header text-right">
-                <h5 class="modal-title">إضافة تفاعل</h5>
+                <h5 class="modal-title">{{t('shop.add-react')}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" @submit.prevent="submitCommentOrReact('reaction',$event)">
@@ -117,8 +117,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="mt-0"> 
-                        <button class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">تأكيد</button> 
-                        <button type="button" class="btn" data-bs-dismiss="modal">إغلاق</button>
+                        <button class="btn px-4 mx-3 py-1 rating-submit" style="background-color: var(--background);">{{t('Confirm')}}</button> 
+                        <button type="button" class="btn" data-bs-dismiss="modal">{{t('Cancel')}}</button>
                     </div>
                 </div>
             </form>
@@ -132,11 +132,13 @@ import * as bootstrap from 'bootstrap';
 import useToast from './../../composition/useToast';
 import axios from 'axios';
 import { onUpdated } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default {
     name: "Rates",
     props: ['data'],
     setup(props) {
+        const { t } = useI18n({});
         const { openToast } = useToast();
         const commentOrReactModal = ref(null);
         const checkedReact = ref('');
@@ -230,7 +232,8 @@ export default {
             addCommentOrReact,
             submitCommentOrReact,
             checkedReact,
-            getReactionEmojie
+            getReactionEmojie,
+            t
         }
     }
 }
@@ -350,5 +353,8 @@ img
     .reaction-input:checked + .reaction-label {
       color: #007bff;
       transform: scale(1.5);
+    }
+    * {
+      font-family: "abdo-master";
     }
 </style>

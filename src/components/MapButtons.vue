@@ -6,6 +6,9 @@
         <router-link class="position-absolute" style="top: 20rem;"  :to="{ name: 'locations' }">
             <img  src="assets/icons/map-search.png" alt="">
         </router-link>
+        <div id="get-location" class="position-absolute" style="bottom: 10rem;" >
+            <img  src="assets/icons/map-location.png" alt="">
+        </div>
     </div>
 </template>
 
@@ -25,11 +28,11 @@ export default {
 </script>
 
 <style scoped>
-.buttons-container a {
+.buttons-container a,.buttons-container div {
     z-index: 10;
     right: 10px;
 }
-.buttons-container a img{
+.buttons-container a img,.buttons-container div img{
     width: 50px;
     background: #8080807d;
     padding: 0;

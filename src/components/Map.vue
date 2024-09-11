@@ -104,6 +104,35 @@ export default {
         });
         devicesMarkers.push(marker);
       });
+
+      // Get Current Location
+      const locationButton = document.querySelector("#get-location");
+      locationButton.addEventListener("click", () => {
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    map.setCenter(pos);
+                    new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        // title: "You are here",
+                    });
+                },
+                () => {
+                    handleLocationError(true, map.getCenter());
+                }
+            );
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, map.getCenter());
+        }
+      });
     }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
