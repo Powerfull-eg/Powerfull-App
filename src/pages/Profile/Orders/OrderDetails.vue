@@ -11,15 +11,14 @@
         }}</span>
       </div>
     </div>
-    <div v-else class="order-container" style="margin: 3rem 0 9rem 0;">
+    <div v-else class="order-container" :style="'margin: 3rem 0 9rem 0; direction: ' + (lang == 'ar' ? 'rtl' : 'ltr') + ';'">
       <div class="order-time my-4 p-3">
-        <h4 class="my-1 d-block my-2">{{ shop.shopName }}</h4>
+        <h4 class="my-1 d-block my-2">{{ shop?.name }}</h4>
         <div class="start my-2 d-flex flex-row">
           <div class="order-image"><img src="/assets/icons/clock.svg" width="50" alt=""></div>
           <div class="data d-flex flex-column">
             <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ t('Start Time') }}</span>
-            <span class="content fs-6 mx-2"> {{ new Date(new Date(order.borrowTime) -
-              timezoneDiff).toLocaleString("en-uk") }}</span>
+            <span class="content fs-6 mx-2"> {{ setTime(order.borrowTime) }}</span>
           </div>
         </div>
         <div class="duration my-2 d-flex flex-row">
@@ -34,9 +33,8 @@
         <div class="order-details single my-2 d-flex flex-row">
           <div class="order-image m-2"><img class="py-1" src="/assets/icons/direction.png" width="50" alt=""></div>
           <div class="data d-flex flex-column">
-            <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ shop.shopName }}</span>
-            <span class="content fs-6 mx-2"> {{ order.returnTime ? new Date(new Date(order.returnTime) -
-              timezoneDiff).toLocaleString("en-uk") : "Battery Not Returned" }}</span>
+            <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ shop?.name }}</span>
+            <span class="content fs-6 mx-2"> {{ order.returnTime ? setTime(order.returnTime) : "Battery Not Returned" }}</span>
           </div>
         </div>
         <!--  -->
@@ -86,6 +84,7 @@ import { addCircleOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/vue';
 import useToast from '../../../composition/useToast';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 
 export default {
   name: 'Tickets',
@@ -109,6 +108,10 @@ export default {
       2: { text: t('Completed'), class: 'dark' },
     };
 
+    //settings 
+    const store = useStore();
+    const settings = ref(store.getters["settings/settings"]);
+    
     // Check Internet
     if (localStorage.connection == false) {
       openToast(t('You are offline please reconnect and try again'), 'danger', 'bottom');
@@ -116,8 +119,8 @@ export default {
     }
 
     function shopData(deviceID) {
-      let shop; let
-        shopId;
+      let shop; 
+      let shopId;
       const devices = JSON.parse(localStorage.devices);
       const shops = JSON.parse(localStorage.shops);
 
@@ -210,8 +213,25 @@ export default {
       return `${hours ? (`${hours} ${t('hours')}`) : ''} ${minutes ? (`${minutes} ${t('minutes')}`) : ''} ${seconds} ${t('seconds')}`;
       // return { hours: hours, minutes: minutes, seconds: seconds };
     }
-    const timezoneDiff = 1000 * 60 * 60 * 6;
+    // const timezoneDiff = 1000 * 60 * 60 * 6;
+    const setTime = (dateString) => {
+      const date = new Date(dateString);
 
+      const options = {
+        timeZone: settings.value?.timezone ?? 'Africa/Cairo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      };
+
+      const formattedDate = date.toLocaleString('en-EG', options);
+      console.log(formattedDate); 
+      return formattedDate;
+    }
+    const lang = localStorage.locale;
     return {
       loader,
       order,
@@ -222,8 +242,10 @@ export default {
       shop,
       checkReturn,
       timeDifference,
-      timezoneDiff,
-      t
+      // timezoneDiff,
+      setTime,
+      t,
+      lang
     };
   },
 };

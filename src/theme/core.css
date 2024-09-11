@@ -95,7 +95,11 @@ outline: 1px solid slategrey;
 @font-face {
     font-family: "bahij";
     src: url("/assets/fonts/bahij-font/Bahij_TheSansArabic-SemiBold.ttf");
-  }
+}
+@font-face {
+    font-family: "abdo-master";
+    src: url("/assets/fonts/Abdo-Master/ALFONT_COM_ALFONT_COM_ABDO-MASTER-DEMIBOLD_1-1.OTF");
+}
 * {
     font-family: "bahij";
 }

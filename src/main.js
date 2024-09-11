@@ -4,26 +4,22 @@ import { Storage } from '@capacitor/storage';
 import mitt from 'mitt';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { createI18n } from 'vue-i18n';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import bootstrap from 'bootstrap';
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import Utils from './utils/index';
-
+import '@fortawesome/fontawesome-free/css/all.css';
 import redirectToHome from './composition/redirectToHome';
 
 import BaseLayout from './components/base/BaseLayout.vue';
 import ErrorMessage from './components/ErrorMessage.vue';
 import Loading from './components/Loading.vue';
-
 /* import the fontawesome core */
-
+import { library } from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */
-
-/* import specific icons */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -135,7 +131,8 @@ app.config.globalProperties.$validate = Utils.validations;
 app.component('base-layout', BaseLayout);
 app.component('error-message', ErrorMessage);
 app.component('loading', Loading);
-app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('font-awesome-icon', FontAwesomeIcon)
+
 router.isReady()
   .then(() => {
     app.mount('#app');

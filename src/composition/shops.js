@@ -8,13 +8,13 @@ export default async function getShops() {
     if(!online){
         errMessages.push("No Internet Connection!");
         return;
-    }  
+    }
 
-   const apiUrl = `${process.env.VUE_APP_API_URL}/api/shops`;
+   const apiUrl = `${process.env.VUE_APP_API_URL}/api/shops/new`;
    const axios = require('axios');
 
     const config = {
-        method: 'post',
+        method: 'get',
         url: apiUrl,
         headers: { 
             "Accept" : "Application/json"
@@ -24,12 +24,7 @@ export default async function getShops() {
     await axios(config)
     .then(function (response) {
         console.log(response);
-        if(response.data[0] == 200 && JSON.parse(response.data[1]).code == 0){
-            shops = JSON.parse(response.data[1]).data
-        }else{
-            errMessages.push(JSON.parse(response.data[1]).msg)
-        }        
-        return;
+        shops = response.data;
     })
     .catch(function (error) {
         console.log(error);

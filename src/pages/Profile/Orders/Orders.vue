@@ -24,13 +24,13 @@
         <div class="order my-3" v-for="order in orders" :key="order.id"
           :data-month="(new Date(new Date(order.borrowTime) - timezoneDiff)).getMonth() + 1">
           <router-link class="w-100 d-flex flex-row" :to="{ name: 'Order', params: { id: order.id } }">
-            <div class="order-image"><img :src="shopData(order.station_id).shopBanner ?? '/assets/images/powericon.png'"
+            <div class="order-image"><img :src="shopData(order.station_id)?.logo ?? '/assets/images/powericon.png'"
                 width="100" alt=""></div>
             <div class="d-flex flex-column ms-3 w-75">
               <span class="date fw-bold">{{ new
                 Date(order.created_at).toISOString().replace(/T.*/, '').split('-').reverse().join('-') }}</span>
               <span class="name fw-bold " style="font-size: 1.2rem;color: var(--background);">{{
-                shopData(order.station_id).shopName }}</span>
+                shopData(order.station_id)?.name ?? '' }}</span>
               <div class="d-flex justify-content-between">
                 <span class="price me-2" style="font-weight: bold;">{{ order.amount > 0 ? order.amount + " EGP" :
                   t('Free')
@@ -53,6 +53,7 @@
 import {
   ref, onMounted, onUpdated, watchEffect,
 } from 'vue';
+
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { addCircleOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -124,8 +125,8 @@ export default {
     });
 
     function shopData(deviceID) {
-      let shop; let
-        shopId;
+      let shop; 
+      let shopId;
       const devices = JSON.parse(localStorage.devices);
       const shops = JSON.parse(localStorage.shops);
 
@@ -140,7 +141,7 @@ export default {
           });
         }
       });
-      return shop;
+      return shop ?? null;
     }
 
     const filterOrdersByMonth = (orders, month) => {

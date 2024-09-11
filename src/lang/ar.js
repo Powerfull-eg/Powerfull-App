@@ -3,6 +3,8 @@ export default {
     "Select Language":"اختار اللغة",
     "Locations":"المحطات",
     "How To Use": "كيفية الإستخدام",
+    "No Locations Available": "لا توجد مواقع متاحة",
+    "Google Maps": "خرائط جوجل",
     "Scan": "QRاقرأ ال",
     "Send": "أرسل",
     "Show":"عرض",
@@ -98,6 +100,8 @@ export default {
     "Send Your Message":"أرسل رسالتك",
     "Under Maintenance": "تحت الصيانة",
     "App is not available at the moment": "التطبيق غير متوفر حاليا",
+    "Not Available": "غير متوفر",
+    "Not Defined": "غير محدد",
     // Settings
     settings : {
         "Profile":"الملف الشخصي",
@@ -130,7 +134,8 @@ export default {
         "The Minimum length of password should be 8 characters":"كلمة السر لا يجب أن تكون أقل من ٨ حروف",
         "Failed to connect the server, Please try agian":"فشل الإتصال بالسيرفر برجاء إعادة المحاولة",
         "the password and confirm password not identical":"كلمة السر و تآكيد كلمة السر غير متطابقان",
-        "Cant register account":"لا يمكن تسجيل الحساب"
+        "Cant register account":"لا يمكن تسجيل الحساب",
+        "You should login first": "يجب عليك تسجيل الدخول أولاً",
     },
     phone : {
         "Phone Number":"رقم التليفون",
@@ -165,6 +170,35 @@ export default {
         "You will not be able to see our campaigns": "لن تتمكن من رؤية حملاتنا",
         "Back to login": "العودة لتسجيل الدخول",
         "Continue as guest": "المتابعة كضيف"
-    }
+    },
+   "shop": {
+    "Open": "مفتوح",
+    "Close": "مغلق",
+    "Closes": "يغلق",
+    "Opens": "يفتح",
+    "Ready": "جاهز للاستخدام",
+    "Not-Ready": "غير جاهز للاستخدام",
+    "access": "إمكانية الوصول",
+    "type": "النوع",
+    "price": "السعر",
+    "Location": "الموقع",
+    "save": "حفظ",
+    "battery": "البطارية",
+    "Menu & Discounts": "المنيو والخصومات",
+    "rates": "التقييمات",
+    "rate": "التقييم",
+    "comment": "التعليق",
+    "full-slots": "المنافذ الممتلئة",
+    "empty-slots": "المنافذ الفارغة",
+    "no offers": "لا تتوفر عروض",
+    "add-react": "إضافة تفاعل",
+    "add-comment": "إضافة تعليق",
+    "no-comment": "لا توجد تعليقات",
+    "no-comments-rates": "لا توجد تعليقات أو تقييمات متاحة",
+    "shop-saved-successfully": "تم حفظ المتجر بنجاح",
+    "shop-removed-from-saved": "تمت إزالة المتجر من المحفوظات",
+    "cant-save-shop": "لا يمكن حفظ المتجر",
+    "cant-remove-shop-from-saved": "لا يمكن إزالة المتجر من المحفوظات",
+   } 
     
 }
