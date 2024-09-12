@@ -517,6 +517,11 @@ export default {
       border-top-right-radius: 10px;
       color: var(--color) !important;
     }
+    .mapsBtn {
+        /* prevent link style */
+        text-decoration: none;
+        color: #000;
+    }
     .body-bottom
     {
       border: 1px solid #474747a1;
