@@ -173,7 +173,7 @@ export default {
     },
    "shop": {
     "Open": "مفتوح",
-    "Close": "مغلق",
+    "Closed": "مغلق",
     "Closes": "يغلق",
     "Opens": "يفتح",
     "Ready": "جاهز للاستخدام",

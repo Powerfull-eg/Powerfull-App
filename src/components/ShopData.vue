@@ -19,7 +19,7 @@
                 <!-- distance -->
                 <div class="distance" style="padding-right: 5px;">
                     <img src="assets/icons/telegram.svg" style=" width: 1rem" alt="distance">
-                    <span>{{ getUserDistance(modalData?.data?.location?.length ? modalData?.data?.location?.split(",") : modalData?.location?.split(",")) }}</span>
+                    <span>{{ getUserDistance(modalData?.data?.location?.length > 0 ? modalData?.data?.location?.split(",") : modalData?.location?.split(",")) }}</span>
                     <span>{{ userDistance }}</span>
                 </div>
                 <!-- time -->
@@ -36,7 +36,7 @@
                         <span style="font-size: 8px;">{{ t('shop.Ready') }}</span>
                     </div>
                     <div v-else class="font-weight-bold" style="padding:3px; background-color: #fff; border: 1px solid; display: flex;"> 
-                        <span style="border-radius:50%;width: 15px;display: block;margin-right: 3px; background-color: #ff0000;"></span>
+                        <span style="border-radius:50%; width: 15px;height: 15px; display: block;margin-right: 3px; background-color: #ff0000;"></span>
                         <span>{{ t('shop.Not-Ready') }}</span>
                     </div>
                 </div>
@@ -220,14 +220,18 @@ export default {
             const targetsNavs = document.querySelectorAll('[data-target]');
             for (let i = 0; i < targets.length; i++) {
                 targets[i].id === target ? targets[i].style.display = 'block' : targets[i].style.display = 'none';
-                if (targetsNavs[i].getAttribute('data-target') === target) {
-                        targetsNavs[i].classList.add('selected');
+                if (targetsNavs[i]?.getAttribute('data-target') === target) {
+                        targetsNavs[i] ? targetsNavs[i]?.classList?.add('selected') : '';
                 } else {
-                    targetsNavs[i].classList.remove('selected');
+                    targetsNavs[i] ? targetsNavs[i]?.classList?.remove('selected') : '';
                 }            
             }
         })
         const viewMenu = () => {
+            document.getElementById('menus').addEventListener('hidden', () => {
+               gallery.destroy();
+            });
+
             const gallery = new Viewer(document.getElementById('menus'));
             gallery.show(true);
         }
@@ -252,6 +256,11 @@ export default {
         const toRadians = (degrees) => degrees * (Math.PI / 180);
 
         const haversineDistance = (userLocation, shopLocation) => {
+            if (!userLocation || !shopLocation) {
+                console.error("Invalid userLocation or shopLocation");
+                return;
+            }
+
             const R = 6371; // Earth's radius in kilometers
 
             const lat1 = userLocation.latitude;
@@ -276,11 +285,11 @@ export default {
         const getUserDistance = (shopLocation) => {
             let distance = '';
             // Ensure shopLocation is a valid array with at least two elements
-            if (!Array.isArray(shopLocation) || shopLocation.length < 2) {
+            if (shopLocation === null || shopLocation === undefined || !Array.isArray(shopLocation) || shopLocation.length < 2) {
                 console.error("Invalid shopLocation");
                 return;
             }
-
+            // Get the user's current location
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     // Set the user's location
@@ -293,7 +302,6 @@ export default {
                         const kmDistance = haversineDistance(userLocation.value, shopLocation);
                         distance = `${Number(kmDistance).toPrecision(2)} km`;
                         userDistance.value = distance;
-                        console.log(distance,typeof distance);
                         return distance;
                     }
                 },
@@ -391,7 +399,7 @@ export default {
         const isSaved = async () => {
             // Check if user is logged in
             const loggeduser = localStorage?.token ?? null;
-            if(!loggeduser) { return; }
+            if(!loggeduser || props?.modalData?.id === undefined || props?.modalData?.id === null) { return; }
             
             // send axios request
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
@@ -470,10 +478,18 @@ export default {
       border-top-right-radius: 10px;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
+      font-size: .6rem;
+      max-width: 100% !important;
     }
 
+    .summary >div > div {
+        max-width: 20%;
+    }
     .summary {
       font-size: .7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .body-top  img, .body-middle img
     {

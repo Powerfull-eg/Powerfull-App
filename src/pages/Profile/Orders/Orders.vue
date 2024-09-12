@@ -27,15 +27,10 @@
             <div class="order-image"><img :src="shopData(order.station_id)?.logo ?? '/assets/images/powericon.png'"
                 width="100" alt=""></div>
             <div class="d-flex flex-column ms-3 w-75">
-              <span class="date fw-bold">{{ new
-                Date(order.created_at).toISOString().replace(/T.*/, '').split('-').reverse().join('-') }}</span>
-              <span class="name fw-bold " style="font-size: 1.2rem;color: var(--background);">{{
-                shopData(order.station_id)?.name ?? '' }}</span>
+              <span class="date fw-bold">{{ new Date(order.created_at).toISOString().replace(/T.*/, '').split('-').reverse().join('-') }}</span>
+              <span class="name fw-bold " style="font-size: 1.2rem;color: var(--background);">{{ shopData(order.station_id)?.name ?? '' }}</span>
               <div class="d-flex justify-content-between">
-                <span class="price me-2" style="font-weight: bold;">{{ order.amount > 0 ? order.amount + " EGP" :
-                  t('Free')
-                }}
-                </span>
+                <span class="price me-2" style="font-weight: bold;">{{ order.amount > 0 ? order.amount + " EGP" : t('Free') }}</span>
                 <span :class="'status text text-' + status[order.status].class" style="font-weight: bold;">{{
                   status[order.status].text }}</span>
               </div>
@@ -102,6 +97,7 @@ export default {
           console.log(res);
           allOrders.value = res.data.orders;
           orders.value = allOrders.value;
+          console.log(orders.value);
           setTimeout(() => { loader.value = false; }, 2000);
         })
         .catch((err) => {
@@ -129,14 +125,12 @@ export default {
       let shopId;
       const devices = JSON.parse(localStorage.devices);
       const shops = JSON.parse(localStorage.shops);
-
       devices.map((device) => {
         if (deviceID === device.DeviceId) {
           shopId = device.shopId;
           shops.map((savedShop) => {
-            if (shopId === savedShop.newID) {
+            if (shopId === savedShop.provider_id) {
               shop = savedShop;
-              console.log(shop);
             }
           });
         }

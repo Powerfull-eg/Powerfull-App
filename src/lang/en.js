@@ -171,7 +171,7 @@ export default {
     },
     "shop": {
         "Open": "Open",
-        "Close": "Close",
+        "Closed": "Closed",
         "Closes": "Closes",
         "Opens": "Opens",
         "Ready": "Ready For Use",
