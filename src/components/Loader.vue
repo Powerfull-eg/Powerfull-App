@@ -2,10 +2,10 @@
     <div id="lottie-container" class="">
         <div>
             <!-- for ios -->
-            <img src="assets/images/poster.png" alt="poster-image">
+            <img src="assets/loader/powerfull.gif" id="gif-poster" alt="poster-image">
             <!-- <lottie-player src="/assets/vectors/powerfull-loader.json" background="transparent" speed="1" direction="1" mode="normal" autoplay></lottie-player> -->
             <!-- for android -->
-            <!-- <video src="assets/vectors/powerfull-loader.mp4" poster="assets/images/poster.png" autoplay="true" muted="true"></video> -->
+            <!-- <video src="assets/loader/powerfull.mp4" poster="assets/images/poster.png" autoplay="true" muted="false"></video> -->
         </div>
         <div class="mx-auto m-5 spinner-container">
             <ion-spinner name="dots" style="display:none"></ion-spinner>
@@ -39,6 +39,7 @@ export default {
   height: 100vh;
   position: relative;
   z-index: 10;
+  background: #eae9e9;
 }
 /* for ios */
 #lottie-container lottie-player {
@@ -55,7 +56,7 @@ export default {
 }
 
 #lottie-container video {
-  max-height: 100%; 
+  max-height: 75%; 
   position: absolute;
   top: 50%;
   left: 50%;

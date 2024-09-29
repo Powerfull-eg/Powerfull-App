@@ -562,9 +562,14 @@ export default {
       background: var(--color);
       margin: 0 auto;
     }
+    #menus{
+        overflow-x: auto;
+        max-width: fit-content;
+        width: fit-content;
+    }
     .menu-image {
       width: 10rem;
-      max-width: 7rem;
+      max-width: 10rem;
       padding: 0 5px;
     }
     .img-thumbnail {

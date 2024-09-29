@@ -168,7 +168,6 @@ export default {
 }
 .submit{
   text-align: center;
-    border: 2px solid var(--color);
     padding: 1rem;
     border-radius: 20px;
     display: block;
@@ -186,7 +185,6 @@ export default {
     left: 0;
     position: fixed;
     width: 100%;
-    padding: 3rem 0;
     background-color: var(--background);
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;

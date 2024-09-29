@@ -114,6 +114,7 @@ export default {
     watchEffect(getCards);
 
     const openIframe = (link) => {
+      link = link.includes('?') ? `${link}&lang=${localStorage.locale}` : `${link}?lang=${localStorage.locale}`
       let options;
       if(cordova.platformId === 'ios'){
         options = 'location=yes,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes,toolbarposition=top,presentationstyle=formsheet';
