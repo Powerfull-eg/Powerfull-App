@@ -13,7 +13,7 @@
           <img :src="userData && userData.photo != '' ? userData.photo : '/assets/icons/avatar.png'"
             class="img-fluid bg-white d-block "
             style="border: 2px solid;border-color: var(--background); border-radius: 50%; width: 3rem;" alt="User Image">
-          <div style="line-height: 1.1rem;font-size: 0.9rem;" :class="'d-flex flex-column text-' + (lang === 'ar' ? 'end' : 'start')">
+          <div style="line-height: 1.1rem;font-size: 0.9rem;" :class="'d-flex pe-1 flex-column text-' + (lang === 'ar' ? 'end' : 'start')">
             <span style="color: #fff; display: inline-block;"> {{ t('Welcome!') }}</span><span class="text-white">{{ userData ? userData.first_name : "" }}</span>
           </div>
         </div>
@@ -46,7 +46,7 @@
             class="img-fluid d-block m-1"
             style="border: 2px solid;border-color: var(--background); border-radius: 50%; width: 3rem;" alt="User Image">
 
-          <div style="line-height: 1.1rem;" class="d-flex flex-column">
+          <div style="line-height: 1.1rem;" class="d-flex flex-column pe-1">
             <span :style="convertHeaderBg ? 'color: #fff !important' : 'color: var(--background);'">
               {{ t('Welcome!') }}</span><span>{{ userData ? userData.first_name : "" }}</span>
           </div>

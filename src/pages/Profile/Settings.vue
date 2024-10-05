@@ -41,7 +41,7 @@ export default {
     const deleteAccount = () => {
       let options;
       if(cordova.platformId === 'ios'){
-        options = 'location=yes,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes,toolbarposition=top,presentationstyle=formsheet';
+        options = 'location=yes,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes,toolbarposition=top,presentationstyle=fullscreen';
       }else{
         options = 'location=yes,zoom=no,fullscreen=no,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes';
       }

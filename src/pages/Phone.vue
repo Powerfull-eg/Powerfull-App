@@ -11,7 +11,7 @@
 
       </div>
       <div class="w-100 h-50 d-flex" style="background-color: var(--main-color-light);">
-        <div class="bg-white w-100 h-100 text-dark lower-part">
+        <div class="bg-white w-100 h-100 text-dark lower-part" style="height: 107% !important; ">
           <div class="form-container text-center  d-flex flex-column "
             :style="(otpSent && otpVerified && !userExist ? 'margin-top: unset' : '')">
             <form v-if="!otpSent" id="phone-form" @submit.prevent="submitPhone()">
@@ -41,10 +41,10 @@
                 <div class="fs-3 my-2" style="color: var(--main-color-light);">+20{{ phone }}</div>
                 <a class="mb-3 text-start text-decoration-none mx-4" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
                 <div class="otp-input">
-                  <input type="number" min="0" max="9" required>
-                  <input type="number" min="0" max="9" required>
-                  <input type="number" min="0" max="9" required>
-                  <input type="number" min="0" max="9" required>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
                 </div>
                 <div class="d-flex justify-content-between mx-3">
                   <a class="text-primary text-decoration-none" @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a>
@@ -182,8 +182,10 @@ export default {
       if (document.querySelector('form#otp') == null) {
         setTimeout(() => prepareOtpInputs(), 2000);
       }
-      const inputs = document.querySelectorAll('form#otp .otp-input input');
+      const inputs = document.querySelectorAll('form#otp .otp-input ion-input input');
       inputs.forEach((input, index) => {
+          // Add some styles
+          input.style.padding = "0px !important"; 
           // move to next input
           input.addEventListener('input', (e) => {
               if (e.target.value.length > 1) {
@@ -739,28 +741,33 @@ form#new-user div.form-container > img {
       justify-content: center;
       margin-bottom: 2rem;
   }
-  .otp-input input {
-      width: 50px;
-      height: 75px;
+  .otp-input ion-input {
+      width: 35px;
+      max-width: 35px;
+      height: 45px;
       margin: 0 8px;
       text-align: center;
       font-size: 1.5rem;
       border: 2px solid grey;
-      border-radius: 12px;
+      border-radius: 10px;
       color: var(--main-color);
       transition: all 0.3s ease;
+      --padding-start: 0;
+      --padding-end: 0;
+      --padding-top: 0;
+      --padding-bottom: 0;
   }
-  .otp-input input:focus {
+  .otp-input ion-input:focus-within {
       border-width: 3px;
       box-shadow: 0 0 0 2px #000;
       outline: none;
   }
-  .otp-input input::-webkit-outer-spin-button,
-  .otp-input input::-webkit-inner-spin-button {
+  .otp-input ion-input::-webkit-outer-spin-button,
+  .otp-input ion-input::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
   }
-  .otp-input input[type=number] {
+  .otp-input ion-input[type=number] {
       -moz-appearance: textfield;
   }
 
