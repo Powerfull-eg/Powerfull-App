@@ -18,7 +18,7 @@ import Footer from '../../components/Footer.vue';
 import Loading from '../../components/Loading.vue';
 import useToast from '../../composition/useToast';
 import '../../composition/notification';
-
+import { useI18n } from 'vue-i18n';
 export default {
   name: 'Home',
   components: {
@@ -31,6 +31,7 @@ export default {
     const { openToast } = useToast();
     const online = localStorage.connection == true;
     const router = useRouter();
+    const { t } = useI18n();
     const Icons = ref({
       save,
       arrowRedo,
@@ -41,9 +42,21 @@ export default {
     const redirectToLocations = () => {
       if (!online) { return router.push({ name: 'locations' }); }
     };
-
-    onMounted(() => { redirectToLocations(); });
-    onUpdated(() => { redirectToLocations(); });
+    
+    const exitApp = () => {
+      const confirm = confirm('Are you sure you want to exit?');
+      if (confirm) cordova.plugins.exit();
+    }
+    const preventBack = () => {
+      document.addEventListener("backbutton", (e) => {
+        if(window.location.pathname === '/home' || window.location.pathname === '/'){
+          e.preventDefault();
+          exitApp();
+        }
+      }, false);
+    }
+    onMounted(() => { redirectToLocations(); preventBack(); });
+    onUpdated(() => { redirectToLocations(); preventBack(); });
 
     if (Array.isArray(devices) && devices.length < 1) {
       openToast('Failed loading map locations', 'danger', 'bottom');

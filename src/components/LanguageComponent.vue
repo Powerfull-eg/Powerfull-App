@@ -2,15 +2,15 @@
     <div class="container mx-auto" id="container">
         <div class="header fs-1 fw-bold text-center"> {{ t("Select Language") }} </div>
         <div class="language-selector m-3 d-flex flex-column justify-content-evenly">
-            <div @click="selectLanguage" data-lang="ar" :class="'language-container ' + (language === 'ar' ? 'selected' :'')">
+            <div @click="selectLanguage" data-lang="ar" :class="'language-container ' + (lang === 'ar' ? 'selected' :'')">
                 <img class="flag img-fluid d-block" src="assets/icons/eg-flag.png" width="50" alt="">
                 <div class="">العربية</div>
             </div>
-            <div @click="selectLanguage" data-lang="en" :class="'language-container ' + (language === 'en' ? 'selected' :'')">
+            <div @click="selectLanguage" data-lang="en" :class="'language-container ' + (lang === 'en' ? 'selected' :'')">
                 <img class="flag img-fluid d-block" src="assets/icons/us-flag.png" width="50" alt="">
                 <div class="">English</div>
             </div>
-            <div class="btn" @click="submitLanguage"> {{ t("Submit") }} </div>
+            <div class="btn" @click="submitLanguage"> {{ lang === "en" ? "Submit" : "تأكيد" }} </div>
         </div>
     </div>
 </template>
@@ -46,8 +46,7 @@ export default {
             }, 1000);
         }
         
-        const language = localStorage?.locale;
-        return { selectLanguage, submitLanguage, language, t }
+        return { selectLanguage, submitLanguage, lang, t }
     }
 }
 </script>

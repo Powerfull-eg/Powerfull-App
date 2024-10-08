@@ -11,7 +11,7 @@
 
       </div>
       <div class="w-100 h-50 d-flex" style="background-color: var(--main-color-light);">
-        <div class="bg-white w-100 h-100 text-dark lower-part">
+        <div class="bg-white w-100 h-100 text-dark lower-part" style="height: 107% !important; ">
           <div class="form-container text-center  d-flex flex-column "
             :style="(otpSent && otpVerified && !userExist ? 'margin-top: unset' : '')">
             <form v-if="!otpSent" id="phone-form" @submit.prevent="submitPhone()">
@@ -37,15 +37,22 @@
             </form>
             <form v-else-if="otpSent && !otpVerified" style="margin-bottom: 2rem;" id="otp" @submit.prevent="verifyOtp()">
               <div style="padding-top: 50px;" class="form-inputs fs-6 d-flex flex-column">
-                <span class="m-2">{{emailOtp ? t("phone.Enter your otp number that we sent to your email") : t("phone.Enter your otp number that we sent to your phone")}}</span>
-                <ion-input name="otp" inputmode="numeric" pattern="[0-9٠-٩]*" v-model="otp" autocomplete label-placement="floating" type="number"
-                  placeholder="OTP"></ion-input>
-                <span id="counter" class="text text-danger text-center mb-3"></span>
+                <span class="m-2">{{emailOtp ? t("phone.Please enter the code that has been sent to this email") : t("phone.Please enter the code that has been sent to this number")}}</span>
+                <div class="fs-3 my-2" style="color: var(--main-color-light);">+20{{ phone }}</div>
+                <a class="mb-3 text-start text-decoration-none mx-4" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
+                <div class="otp-input">
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                </div>
+                <div class="d-flex justify-content-between mx-3">
+                  <a class="text-primary text-decoration-none" @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a>
+                  <span>{{ t("phone.didnt get code?") }}</span>
+                </div>
+                <span id="counter" class="text text-danger text-end m-3"></span>
                 <span v-if="otpStatus != 0" :class="'otp-status text text-' + (otpStatus === 1 ? 'success' : 'danger')">{{
                   otpStatus === 1 ? t("phone.OTP is correct") : t("phone.OTP is not correct, please try again") }}</span>
-                <span class="d-block">{{ t("phone.didnt get code?") }} <a class="text-primary text-decoration-none"
-                    @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a></span>
-                <a class="m-3 text-decoration-none" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
                 <div class="form-submit">
                   <button type="submit">{{ t("Confirm")}}</button>
                 </div>
@@ -64,7 +71,6 @@
                 </div>
               </div>
             </form>
-            <!-- <NewUser v-else-if="otpSent && otpVerified && !userExist" :phone="phone"/> -->
             <form id="new-user" v-else-if="otpSent && otpVerified && !userExist && !resetPassword" class="w-75"
               @submit.prevent="register()">
               <div class="form-inputs d-flex flex-column">
@@ -169,7 +175,48 @@ export default {
     onMounted(() => {
       otpActivation();
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
+      prepareOtpInputs();
     });
+
+    const prepareOtpInputs = () => {
+      if (document.querySelector('form#otp') == null) {
+        setTimeout(() => prepareOtpInputs(), 2000);
+      }
+      const inputs = document.querySelectorAll('form#otp .otp-input ion-input input');
+      inputs.forEach((input, index) => {
+          // Add some styles
+          input.style.padding = "0px !important"; 
+          // move to next input
+          input.addEventListener('input', (e) => {
+              if (e.target.value.length > 1) {
+                  e.target.value = e.target.value.slice(0, 1);
+              }
+              if (e.target.value.length === 1) {
+                  if (index < inputs.length - 1) {
+                      inputs[index + 1].focus();
+                  }
+              }
+              // submit on last input
+              if (index === inputs.length - 1) {
+                      input.disabled = true;
+                      setTimeout(() => verifyOtp(),1000);
+              }
+          });
+          // delete and back on backspace
+          input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value) {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+                if (e.key === 'e') {
+                    e.preventDefault();
+                }
+            });
+        });
+        console.warn('OTP Inputs ready');
+    }
+
     const  otpActivation = async () => {
       const url = `${process.env.VUE_APP_API_URL}/api/otp-activation`;
       await axios.post(url,{phone:phone.value})
@@ -215,6 +262,11 @@ export default {
       sendOtp();
     };
     const sendOtp = () => {
+      const inputs = document.querySelectorAll('form#otp .otp-input input');
+      inputs.forEach(input => {
+                      input.value = '';
+                      input.disabled = false;
+                  });
       const type = emailOtp.value ? "email" : "phone";
       const url = `${process.env.VUE_APP_API_URL}/api/otp`;
       axios.post(url, { phone: phone.value, type })
@@ -224,7 +276,7 @@ export default {
           modalData.value.loader = true;
           offcanvas.show();
           setCounter();
-          setTimeout(() => { otpSent.value = true; offcanvas.hide(); }, 2000);
+          setTimeout(() => { otpSent.value = true; offcanvas.hide(); prepareOtpInputs(); }, 2000);
         })
         .catch((err) => {
           modalData.value.loader = false;
@@ -234,14 +286,23 @@ export default {
           resetPassword.value = false;
         });
     }
-    const verifyOtp = () => {
+    const  verifyOtp = async () => {
       countdown != null ? clearInterval(countdown) : '';
+
+      const submitBtn = document.querySelector('form#otp .form-submit button');
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+      submitBtn.disabled = true;
       const form = document.querySelector('.form-container > form#otp');
       const formData = new FormData(form);
-      const otp = formData.get('otp');
+      const inputs = document.querySelectorAll('form#otp .otp-input input');
+      const otp = Array.from(inputs).map(input => input.value).join('');
+      inputs.forEach(input => {
+                      input.value = '';
+                      input.disabled = false;
+                  });
 
       const url = `${process.env.VUE_APP_API_URL}/api/check-otp`;
-      axios.post(url, { phone: phone.value, otp })
+      await axios.post(url, { phone: phone.value, otp })
         .then((res) => {
           console.log(res);
           otpVerified.value = true;
@@ -264,6 +325,8 @@ export default {
           }, 2000);
         })
         .catch((err) => { console.log(err); otpVerified.value = false; otpStatus.value = 2; });
+        submitBtn.innerHTML = t('Confirm');
+        submitBtn.disabled = false;
     };
 
     const loginUser = () => {
@@ -465,7 +528,7 @@ export default {
           return;
         }
         // Display the remaining time
-        document.querySelector('#counter').innerHTML = `${t('phone.The otp will expire in')} ${minutes}:${(seconds > 9 ? seconds : `0${seconds}`)}`;
+        document.querySelector('#counter').innerHTML = `${t('phone.Resend OTP in')} ${minutes}:${(seconds > 9 ? seconds : `0${seconds}`)}`;
       }, 1000);
     };
     const resetUserPassword = () => {
@@ -673,12 +736,40 @@ form#new-user div.form-container > img {
     width: 70%;
   }
 
-/* } */
-
-/* .num-input
-{
-
-} */
+  .otp-input {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+  }
+  .otp-input ion-input {
+      width: 35px;
+      max-width: 35px;
+      height: 45px;
+      margin: 0 8px;
+      text-align: center;
+      font-size: 1.5rem;
+      border: 2px solid grey;
+      border-radius: 10px;
+      color: var(--main-color);
+      transition: all 0.3s ease;
+      --padding-start: 0;
+      --padding-end: 0;
+      --padding-top: 0;
+      --padding-bottom: 0;
+  }
+  .otp-input ion-input:focus-within {
+      border-width: 3px;
+      box-shadow: 0 0 0 2px #000;
+      outline: none;
+  }
+  .otp-input ion-input::-webkit-outer-spin-button,
+  .otp-input ion-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+  .otp-input ion-input[type=number] {
+      -moz-appearance: textfield;
+  }
 
 .text-main-color {
   color: var(--main-color-light);

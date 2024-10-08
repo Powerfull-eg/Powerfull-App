@@ -114,9 +114,13 @@ export default {
     watchEffect(getCards);
 
     const openIframe = (link) => {
+      let userName = JSON.parse(localStorage.userData).first_name + ' ' + JSON.parse(localStorage.userData).last_name;
+      userName = userName.length > 17 ? userName.substring(0, 14) + '...' : userName;
+      const data = {lang: localStorage.locale,username: userName};
+
       let options;
       if(cordova.platformId === 'ios'){
-        options = 'location=yes,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes,toolbarposition=top,presentationstyle=formsheet';
+        options = 'location=yes,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes,toolbarposition=top,presentationstyle=fullscreen';
       }else{
         options = 'location=yes,zoom=no,fullscreen=no,clearcache=yes,clearsessioncache=yes,hideurlbar=yes,hardwareback=no,hidenavigationbuttons=yes';
       }
@@ -126,11 +130,11 @@ export default {
         // Handle the received message from the webpage
         console.log('Received message from InAppBrowser:', event.data);
         if (event.data && event.data.status === 'success') {
-          inAppBrowserRef.close();
           openToast(t('Card Added Successfully'), 'success', 'bottom');
-        } else if (event.data && event.data.status === 'fail') {
           inAppBrowserRef.close();
+        } else if (event.data && event.data.status === 'fail') {
           openToast(t('Card Declined'), 'danger', 'bottom');
+          inAppBrowserRef.close();
         }
       });
       inAppBrowserRef.addEventListener('exit', (event) => {

@@ -75,9 +75,9 @@ export default defineComponent({
       console.log(settings.value);
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasApp'));
       // for ios 
-      // const player = document.querySelector('#lottie-container lottie-player');
-      // player.addEventListener('complete', () => {
-      setTimeout(() => {
+      const player = document.querySelector('#lottie-container lottie-player');
+      player.addEventListener('complete', () => {
+      // setTimeout(() => {
 
       // for android
       // const player = document.querySelector('#lottie-container video');
@@ -92,7 +92,7 @@ export default defineComponent({
             hideLoader.value = true;
             let target = localStorage?.oldGuest != true ? 'Intro' : localStorage.isAuth == true ? 'home' : 'phone';
             target = settings.value.maintenance ?  'Maintenance' : target;
-            console.log(target);
+            // console.log(target);
             router.push({ name: target });
           } else {
             modalData.value.header = 'No Internet Connection';
@@ -100,8 +100,8 @@ export default defineComponent({
             offcanvas.show();
           }
         }, 3000);
-      // });
-      },3000);
+      });
+      // },3000);
     });
 
     const restartApp = () => window.location.href = '/';
