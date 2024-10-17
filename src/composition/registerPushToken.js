@@ -5,6 +5,9 @@ export default  function sendPushToken() {
     setTimeout(async () => {
         
         let token;
+        if(cordova.platformId === "ios"){
+            await cordova.plugins.firebase.messaging.requestPermission().then(t =>{ console.log(t); token = t}).catch(err => console.log(err))    
+        }
         await cordova.plugins.firebase.messaging.getToken().then(t =>{ console.log(t); token = t}).catch(err => console.log(err))    
         // const token = "c8yT6yj9P5M:APA91bHDA3jS9j4Gcss9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7Gc9GK4RzZlGK7";
         const userId = JSON.parse(localStorage?.userData ?? "{}")?.id;

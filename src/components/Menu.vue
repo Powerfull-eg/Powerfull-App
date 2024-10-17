@@ -1,5 +1,5 @@
 <template>
-  <ion-menu content-id="main-content" type="overlay" style="font-family: bahij; !important">
+  <ion-menu content-id="main-content" type="overlay" style="font-family: bahij !important">
     <div class="h-100">
       <ion-header>
         <ion-toolbar style="padding: 30px 0px;" class="ion-text-center w-100">
