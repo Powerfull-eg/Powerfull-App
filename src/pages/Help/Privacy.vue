@@ -1,10 +1,8 @@
 <template>
     <base-layout :pageTitle="content.header" :show-menu-button="false" loading="lazy">
         <div class="page-container">
-            <!-- <h1 class="d-block text-center main-title fw-bold">{{t('settings.Terms and Conditions')}}</h1> -->
             <div class="content" :style="locale == 'ar' ? 'direction:rtl': 'direction:ltr'">
                 <div class="part">
-                    <!-- <h4 class="title d-inline-block">{{ content.header }}</h4> -->
                     <ul><li class="content" :style="locale == 'ar' ? 'direction:rtl': 'direction:ltr'">
                       {{ content.subheader }}
                     </li></ul>

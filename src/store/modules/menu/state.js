@@ -32,6 +32,16 @@ export default {
       icon: 'about',
     },
     {
+      title: 'Terms & Conditions',
+      url: '/terms-conditions',
+      icon: 'terms',
+    },
+    {
+      title: 'Contact Us',
+      url: '/contact',
+      icon: 'contact',
+    },
+    {
       title: 'Division',
       type: 2,
     },

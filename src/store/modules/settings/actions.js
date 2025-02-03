@@ -7,7 +7,6 @@ export default {
       const response = await axios.get(url);
       const settings = response.data;
       commit('setSettings', settings);
-      console.log(settings);
     } catch (error) {
       console.error('Error fetching settings:', error);
     }

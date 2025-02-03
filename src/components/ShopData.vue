@@ -348,9 +348,7 @@ export default {
         const lang = localStorage.locale;
         const { t } = useI18n();
         const price = () => {
-            console.log(props.modalData);
-            const prices = props.modalData?.data?.price ?? ( lang === 'ar' ? JSON.parse(localStorage.prices)[0][1] : JSON.parse(localStorage.prices)[0][2]);
-            return prices;
+            return props.modalData?.data?.price;
         }
 
         // Battery section 

@@ -146,12 +146,12 @@ export default {
     }
 
     // add prices to modal
-    const prices = JSON.parse(localStorage.prices)[0];
-    let priceText = '';
-    prices.forEach(([key, value], index) => {
-      priceText += ` ${key}: ${value}${index !== prices.length - 1 ? ',' : ''}`;
-    });
-    modalData.value.prices = `${prices[1]}` ;
+    // const prices = JSON.parse(localStorage.prices)[0];
+    // let priceText = '';
+    // prices.forEach(([key, value], index) => {
+    //   priceText += ` ${key}: ${value}${index !== prices.length - 1 ? ',' : ''}`;
+    // });
+    // modalData.value.prices = `${prices[1]}` ;
     
     // Initialize Map
     initMap();

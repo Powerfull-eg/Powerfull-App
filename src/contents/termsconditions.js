@@ -55,6 +55,22 @@ export default {
                 title:"عمليات الدفع داخل التطبيق",
                 content:"ابدأ بتشغيل تطبيق باورفل على الموبايل، وقم بمسح رمز الاستجابة السريعة (QRcode) لإحدى محطات الباوربانك لدينا، ثم ستتم مطالبتك بتحديد معلومات البنك الخاص بك، وتسجيل الدخول باستخدام بيانات حسابك البنكي للمتابعة، وسيتم خصم مبلغ ( 1 جنيه مصري ) بعد موافقة العميل من خلال إدخال( رقم OTP ) المرسل له برسالة نصية , و ذلك لتسجيل البطاقة البنكية أول مرة فقط . ستتم معالجة المدفوعات عبر بوابة دفع تابعة لجهة خارجية (Paymop) لإدارة عمليات الدفع. وبعد ارجاع الباوربنك الي محطة الشحن سيتم احتساب وقت الايجار و خصمه مباشرة من البطاقة البنكية دون الرجوع للعميل و إذا لم يقم العميل بإسترجاع الباوربنك خلال 48 ساعة يتم خصم مبلغ التأمين بشكل اوتوماتيكي دون الرجوع للعميل . نحن لا نعطي أي إذن أو ترخيص أو تفويض لأي شخص أو وكيل أو شركة لجمع أي نوع من الرسوم ، باستثناء بوابة الدفع Paymop. فلذلك كل المدفوعات تعالج من قبل Paymop. و يرجى إبلاغنا في حال قيام أي طرف ثالث، أو وكيل، أو شركة بتحصيل المدفوعات منك نقدًا، أو عبر الخدمات البنكية على الإنترنت أو أي وسيلة أخرى."
             },
+            {
+                title:"سياسة الاسترداد",
+                content:`سياسة الاسترداد لتطبيق تأجير الباوربانك  لخدمة Powerfull، موضحة على النحو التالي:
+
+                لا توجد أسترداد لمبلغ العملية بعد إنتهاء العملية إلا في بعض الاحكام المذكورة وذلك لأن المبلغ المحصل ناتج عن خدمة مقدمة و هي إيجار باوربانك ( بالساعة ).
+                `
+            },
+            {
+                "title":"الحالة التي يجوز بها للأسترداد",
+                "content":`
+                الرسوم الخاطئة: إذا اعتقد المستخدم أنه تم تحصيل رسوم منه بشكل غير صحيح من قبل النظام، فيجب عليه الاتصال بدعم العملاء على support@powerfull-eg.com. ستفتح الشركة بعد ذلك طلب شكوي و استرداد  بشأن الرسوم.
+                
+                معالجة الاسترداد: إذا كانت نتيجة الشكوي ناجحة وان هناك خطأ في إحتساب قيمة العملية ، فسيتم إرجاع المبلغ للعميل في غضون أربعة عشر يوم عمل بحد أقصي. تتم معالجة عمليات الاسترداد إلى نفس بطاقة الائتمان أو طريقة الدفع التي تم استخدامها للمعاملة الأصلية.
+                
+                الإشعار: سيتلقى المستخدمون إشعارًا من البنك الخاص به بمجرد معالجة استرداد أموالهم. ، من المهم ملاحظة أن المؤسسات المالية قد تتطلب وقت معالجة إضافيًا لإيداع الأموال في حساب المستخدم بعد إصدار الاسترداد.`
+            }
         ]
     },
     en: {
@@ -113,6 +129,20 @@ export default {
                     title:"In-app payments",
                     content:"Start running the Powerful application on your mobile phone, and scan the QR code for one of our Powerbank stations. Then you will be asked to specify your bank information, and log in using your bank account information to continue. An amount of (1 Egyptian Pound) will be deducted after approval. The customer must enter the (OTP number) sent to him via text message, in order to register the bank card for the first time only. Payments will be processed through a third-party payment gateway (Paymop) to manage payment operations. After returning the power bank to the charging station, the rental time will be calculated and deducted. Directly from the bank card without consulting the customer, and if the customer does not retrieve the power bank within 48 hours, the deposit amount is deducted automatically without consulting the customer. We do not give any permission, license or authorization to any person, agent or company to collect any type of fees, with the exception of the portal Payment is Paymop. Therefore, all payments are processed by Paymop. Please notify us if any third party, agent, or company collects payments from you in cash, online banking, or any other means."
                 },
+                {
+                    title : "Refund Policy",
+                    content : `The refund policy for the Powerfull Powerbank rental application is explained as follows:
+
+                    There is no refund of the transaction amount after the transaction is completed except in some of the provisions mentioned because the collected amount is the result of a service provided, which is Powerbank rental (by the hour)`
+                },
+                {
+                    title : "The case in which a refund is permissible:",
+                    content: `Incorrect fees: If the user believes that he has been incorrectly charged by the system, he must contact customer support at support@powerfull-eg.com. The company will then open a complaint and refund request regarding the fees.
+                    
+                    Refund processing: If the complaint result is successful and there is an error in calculating the value of the transaction, the amount will be returned to the customer within a maximum of fourteen business days. Refunds are processed to the same credit card or payment method that was used for the original transaction.
+                    
+                    Notification: Users will receive a notification from their bank once their refund is processed. It is important to note that financial institutions may require additional processing time to deposit funds into the user's account after the refund is issued.`
+                }
             ]
     }
 }

@@ -1,23 +1,21 @@
 <template>
-  <base-layout
-    page-default-back-link="/home"
-    :show-menu-button="false"
-  >
-    <ion-row>
+  <base-layout page-default-back-link="/home" :show-menu-button="false" :pageTitle="t('Contact Us')" >
+    <ion-row class="my-5">
       <ion-col size="12">
-        <a class="d-flex align-items-center no-text-decoration mb-4 mt-3 contact" :href="`tel:${getWhatsappTelephone}`" target="_blank">
+        <a class="d-flex align-items-center no-text-decoration mb-4 mt-3 contact" :href="`tel:+201001822192`" target="_blank">
           <ion-icon :icon="Icon.call" class="mr-2 fs-24"></ion-icon>
-          Conntact via phone
+          {{ t("Conntact via phone") }}
         </a>
-        <a class="d-flex align-items-center no-text-decoration contact" :href="`mailto:${getContactEmail}`" target="_blank">
+        <a class="d-flex align-items-center no-text-decoration contact" :href="`mailto:support@powerfull-eg.com`" target="_blank">
           <ion-icon :icon="Icon.mail" class="mr-2 fs-24"></ion-icon>
-          Send us an Email
+          {{ t("Send us an Email") }}
         </a>
       </ion-col>
-      <ion-col size="12">
+      <ion-col class="text-center mx-auto" size="6">
         <WhatsappButton
           class="my-4"
           message="Hi, I need help with the powerfull App"
+          target="_blank"
         />
       </ion-col>
       <!-- <ion-col size="12">
@@ -33,21 +31,21 @@
         </iframe>
       </ion-col> -->
       <ion-col size="12" class="mt-4 ion-text-center">
-        <ion-text class="fs-20"> Social Media </ion-text>
+        <ion-text class="fs-20"> {{ t("Social Media") }} </ion-text>
         <br />
       </ion-col>
       <ion-col
         size="12"
         class="d-flex align-items-center justify-content-around"
       >
-        <a href="https://www.facebook.com" target="_blank">
+        <a class="social" href="https://www.facebook.com/powerfull.eg" target="_blank">
           <ion-icon :icon="Icon.logoFacebook" class="fs-32"></ion-icon>
         </a>
-        <a href="https://www.instagram.com" target="_blank">
+        <a class="social" href="https://www.instagram.com/powerfull.eg?igsh=NnBjbm5vaDZpbzBi" target="_blank">
           <ion-icon :icon="Icon.logoInstagram" class="fs-32"></ion-icon>
         </a>
-        <a href="https://www.youtube.com" target="_blank">
-          <ion-icon :icon="Icon.logoYoutube" class="fs-32"></ion-icon>
+        <a class="social" href="https://powerfull-eg.com/" target="_blank">
+          <ion-icon :icon="Icon.globeOutline" class="fs-32"></ion-icon>
         </a>
       </ion-col>
     </ion-row>
@@ -62,10 +60,11 @@ import {
   logoFacebook,
   logoInstagram,
   logoYoutube,
+  globeOutline
 } from "ionicons/icons";
 import { ref } from "vue";
 import { mapGetters } from "vuex";
-
+import { useI18n } from 'vue-i18n';
 import WhatsappButton from "../components/whatsapp/SendMessage.vue";
 
 export default {
@@ -81,12 +80,14 @@ export default {
       logoInstagram,
       logoFacebook,
       logoYoutube,
+      globeOutline,
       call,
       mail,
     });
-
+    const { t } = useI18n();
     return {
       Icon,
+      t
     };
   },
 };
@@ -102,5 +103,8 @@ export default {
     font-size: 20px;
     font-weight: 600;
     /* font-family: cursive; */
+  }
+  a.social {
+    color: #ffffff;
   }
 </style>

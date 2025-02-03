@@ -2,7 +2,7 @@
   <Button
     color="success"
     :text="buttonText"
-    :href="`https://wa.me/${getWhatsappTelephone}?text=${message}`"
+    :href="`https://wa.me/+201001822192?text=${message}`"
     :size="size"
     :icon="Icon.logoWhatsapp"
     :iconOnly="iconOnly"
