@@ -106,6 +106,8 @@ export default {
     "Send Your Message":"Send Your Message",
     "Under Maintenance": "Under Maintenance",
     "App is not available at the moment": "App is not available at the moment",
+    "New Update": "New Update",
+    "Update Message":"We've made some exciting improvements to enhance your experience. Update now to enjoy the latest features and performance upgrades!",
     "Not Available": "Not Available",
     "Not Defined": "Not Defined",
     "settings": {

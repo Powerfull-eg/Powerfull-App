@@ -1,8 +1,13 @@
 <template>
 <base-layout :pageTitle="t('Locations')" :show-menu-button="false">
+    <!-- Search Input -->
+    <div class="d-flex justify-content-center align-items-center w-50 mx-auto mt-3 gap-3">
+        <ion-icon style="font-size: 30px;" name="search-outline"></ion-icon>
+        <ion-input v-on:input="filter($event.target.value)" class="searchBar" type="search"></ion-input>
+    </div>
     <div v-if="shops.length > 0" class="d-flex flex-column mt-5">
-        <div class="location row" v-for="shop in shops" :key="shop.id">
-            <div class="shop-data d-flex">
+        <div class="location row" v-for="shop in shops" :key="shop.id" :attr-filter="`${shop.name} ${shop.address} ${shop.city} ${shop.governorate} ${shop?.data?.name ?? ''}`">
+            <div class="shop-data d-flex" >
                 <div class="shop-image me-2"><img :src="shop?.logo ?? 'assets/images/logo.png'" style="max-width: 100px;margin: 10px auto;" :alt=shop.shopName></div>
                 <div class="shop-address my-3 mx-1">
                     <div class="fw-bolder fs-6">{{ shop?.name ?? '' }}</div>
@@ -22,6 +27,7 @@
 <script>
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 export default {
   name: 'Locations',
   setup() {
@@ -29,7 +35,19 @@ export default {
     const online = localStorage.connection == true;
     const cabinetlocations = ref([]);
     const shops = JSON.parse(localStorage.shops);
-    return { shops, online, t };
+    // Filter
+    const filter = (needle) => {
+        const elements = document.querySelectorAll("[attr-filter]");
+        elements.forEach(element => {
+            const haystack = element.getAttribute('attr-filter');
+            if(haystack.toLowerCase().includes(needle.toLowerCase())) {
+                element.classList.contains('d-none') ? element.classList.remove('d-none'): '';
+            }else{
+                element.classList.contains('d-none') ? '' : element.classList.add('d-none');
+            }
+        });
+    }
+    return { shops, online,filter, t };
   },
 };
 </script>
@@ -73,5 +91,11 @@ export default {
     }
     .card-body {
         padding : 0 7px;
+    }
+    .searchBar {
+        width: 50%;
+        background: #ffffff8a;
+        color: #000;
+        border-radius: 30px;
     }
 </style>

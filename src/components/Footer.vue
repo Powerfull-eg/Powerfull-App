@@ -133,7 +133,7 @@ export default {
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasScan'));
       offcanvasCard.value = new bootstrap.Offcanvas(document.querySelector('#offcanvasCard'));
       bsModal.value = new bootstrap.Modal(document.querySelector('#giftModal'), { backdrop: false, keyboard: false });
-      setInterval( () => { getCards(); }, 5000 );
+      // setInterval( () => { getCards(); }, 5000 );
     });
     // Scan Functions
     // Validate the scanning result url

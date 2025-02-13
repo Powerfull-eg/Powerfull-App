@@ -40,12 +40,7 @@
                 <span class="m-2">{{emailOtp ? t("phone.Please enter the code that has been sent to this email") : t("phone.Please enter the code that has been sent to this number")}}</span>
                 <div class="fs-3 my-2" style="color: var(--main-color-light);">+20{{ phone }}</div>
                 <a class="mb-3 text-start text-decoration-none mx-4" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
-                <div class="otp-input">
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                </div>
+                  <InputOtp v-model="otpInputs" integerOnly class="mx-auto my-3" v-on:change="prepareOtpInputs"/>
                 <div class="d-flex justify-content-between mx-3">
                   <a class="text-primary text-decoration-none" @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a>
                   <span>{{ t("phone.didnt get code?") }}</span>
@@ -151,10 +146,11 @@ import axios from 'axios';
 import { logoGoogle, logoFacebook, logoTwitter } from 'ionicons/icons';
 import { useI18n } from 'vue-i18n';
 import NewUser from '../components/phone/NewUser.vue';
+import InputOtp from 'primevue/inputotp';
 
 export default {
   name: 'Phone',
-  components: { ionInput, IonIcon, NewUser },
+  components: { ionInput, IonIcon, NewUser,InputOtp },
   setup() {
     const { t } = useI18n();
     const Icons = { logoGoogle, logoFacebook, logoTwitter };
@@ -171,50 +167,17 @@ export default {
     const userName = ref('!');
     const phone = ref('');
     const phonepattern = /^(10|11|12|15)\d{8}$/;
+    const otpInputs = ref('');
 
     onMounted(() => {
       otpActivation();
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
-      prepareOtpInputs();
     });
 
     const prepareOtpInputs = () => {
-      if (document.querySelector('form#otp') == null) {
-        setTimeout(() => prepareOtpInputs(), 2000);
+      if(otpInputs.value.length == 4){
+        verifyOtp();
       }
-      const inputs = document.querySelectorAll('form#otp .otp-input ion-input input');
-      inputs.forEach((input, index) => {
-          // Add some styles
-          input.style.padding = "0px !important"; 
-          // move to next input
-          input.addEventListener('input', (e) => {
-              if (e.target.value.length > 1) {
-                  e.target.value = e.target.value.slice(0, 1);
-              }
-              if (e.target.value.length === 1) {
-                  if (index < inputs.length - 1) {
-                      inputs[index + 1].focus();
-                  }
-              }
-              // submit on last input
-              if (index === inputs.length - 1) {
-                      input.disabled = true;
-                      setTimeout(() => verifyOtp(),1000);
-              }
-          });
-          // delete and back on backspace
-          input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && !e.target.value) {
-                    if (index > 0) {
-                        inputs[index - 1].focus();
-                    }
-                }
-                if (e.key === 'e') {
-                    e.preventDefault();
-                }
-            });
-        });
-        console.warn('OTP Inputs ready');
     }
 
     const  otpActivation = async () => {
@@ -276,7 +239,6 @@ export default {
           modalData.value.loader = true;
           offcanvas.show();
           setCounter();
-          setTimeout(() => { otpSent.value = true; offcanvas.hide(); prepareOtpInputs(); }, 2000);
         })
         .catch((err) => {
           modalData.value.loader = false;
@@ -294,15 +256,14 @@ export default {
       submitBtn.disabled = true;
       const form = document.querySelector('.form-container > form#otp');
       const formData = new FormData(form);
-      const inputs = document.querySelectorAll('form#otp .otp-input input');
-      const otp = Array.from(inputs).map(input => input.value).join('');
+      const inputs = document.querySelectorAll('form#otp .p-inputotp-input input');
       inputs.forEach(input => {
                       input.value = '';
                       input.disabled = false;
                   });
 
       const url = `${process.env.VUE_APP_API_URL}/api/check-otp`;
-      await axios.post(url, { phone: phone.value, otp })
+      await axios.post(url, { phone: phone.value, otp: otpInputs.value })
         .then((res) => {
           console.log(res);
           otpVerified.value = true;
@@ -633,6 +594,8 @@ export default {
       resetPassword,
       resetUserPassword,
       submitResetPassword,
+      prepareOtpInputs,
+      otpInputs,
       t,
       locale,
       emailOtp
@@ -736,41 +699,10 @@ form#new-user div.form-container > img {
     width: 70%;
   }
 
-  .otp-input {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 2rem;
-  }
-  .otp-input ion-input {
-      width: 35px;
-      max-width: 35px;
-      height: 45px;
-      margin: 0 8px;
-      text-align: center;
-      font-size: 1.5rem;
-      border: 2px solid grey;
-      border-radius: 10px;
-      color: var(--main-color);
-      transition: all 0.3s ease;
-      --padding-start: 0;
-      --padding-end: 0;
-      --padding-top: 0;
-      --padding-bottom: 0;
-  }
-  .otp-input ion-input:focus-within {
-      border-width: 3px;
-      box-shadow: 0 0 0 2px #000;
-      outline: none;
-  }
-  .otp-input ion-input::-webkit-outer-spin-button,
-  .otp-input ion-input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-  }
-  .otp-input ion-input[type=number] {
-      -moz-appearance: textfield;
-  }
-
+::v-deep .p-inputotp-input	{
+  background-color: transparent !important;
+  color: #000;
+}
 .text-main-color {
   color: var(--main-color-light);
 }

@@ -107,6 +107,8 @@ export default {
     "Send Your Message":"أرسل رسالتك",
     "Under Maintenance": "تحت الصيانة",
     "App is not available at the moment": "التطبيق غير متوفر حاليا",
+    "New Update": "تحديث جديد !",
+    "Update Message":"لقد أجرينا بعض التحسينات الرائعة لتعزيز تجربتك. قم بالتحديث الآن للاستمتاع بأحدث الميزات وتحسينات الأداء!",
     "Not Available": "غير متوفر",
     "Not Defined": "غير محدد",
     // Settings
