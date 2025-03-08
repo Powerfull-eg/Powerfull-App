@@ -226,23 +226,22 @@ a.addbtn {
 }
 
 .order {
-  /* border: 0.5px solid var(--color); */
   border-radius: 20px;
   text-align: start;
-  padding: 10px 20px;
-  width: 75%;
+  padding: 15px 20px;
+  width: 85%;
   font-size: 1rem;
   background: var(--color);
   box-shadow: #00000080 0px 4px 10px 0px;
 }
 
 .order-image {
-  padding: 10px;
+  padding: 5px;
   background: #fff;
+  width: 50%;
   border: 2px solid #ddd;
   border-radius: 14px;
-  min-width: 10%;
-  max-width: 25%;
+  align-content: center;
 }
 
 span.status {

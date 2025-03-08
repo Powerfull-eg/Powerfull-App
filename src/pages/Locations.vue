@@ -1,7 +1,7 @@
 <template>
 <base-layout :pageTitle="t('Locations')" :show-menu-button="false">
     <!-- Search Input -->
-    <div class="d-flex justify-content-center align-items-center w-50 mx-auto mt-3 gap-3">
+    <div class="d-flex justify-content-center align-items-center w-75 mx-auto mt-3 gap-3">
         <ion-icon style="font-size: 30px;" name="search-outline"></ion-icon>
         <ion-input v-on:input="filter($event.target.value)" class="searchBar" type="search"></ion-input>
     </div>
@@ -70,7 +70,7 @@ export default {
     text-decoration: unset;
     background: var(--background);
     color: var(--color);
-    padding: 1rem 3rem;
+    padding: 1rem 2rem;
     border-radius: 30px;
     display: block;
     margin: 10px auto;

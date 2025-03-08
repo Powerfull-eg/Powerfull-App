@@ -90,11 +90,12 @@ export default defineComponent({
           if (localStorage.connection == true) {
             navigator.geolocation.getCurrentPosition((pos) => { localStorage.setItem('userLocation', JSON.stringify(pos)); }, (err) => { console.log(err); }, { enableHighAccuracy: true });
             // hide Loader
+            hideLoader.value = true;
             const target = getTargetStartPage();
             router.push({ name: target });
           } else {
-            modalData.value.header = 'No Internet Connection';
-            modalData.value.body = { img: '/assets/icons/fail.png', text: "You maybe doesn't have internet connection.\n Want to know our location ?", textStyle: 'danger' };
+            modalData.value.header = t('No Internet Connection');
+            modalData.value.body = { img: '/assets/icons/fail.png', text: t("Internet Error"), textStyle: 'danger' };
             offcanvas.show();
           }
         }, 3000);

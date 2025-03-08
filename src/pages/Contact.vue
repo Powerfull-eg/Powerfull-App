@@ -98,11 +98,12 @@ export default {
     background: #f68d41;
     padding: 20px;
     border-radius: 20px;
-    width: 88%;
+    width: 95%;
     color: white;
     font-size: 20px;
     font-weight: 600;
     /* font-family: cursive; */
+    margin: 20px auto !important;
   }
   a.social {
     color: #ffffff;

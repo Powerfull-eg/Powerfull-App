@@ -6,6 +6,8 @@ import auth from "./auth";
 import sendPushToken from "./registerPushToken";
 import store from '../store';
 
+auth();
+
 function startApp() {
     const serverData = setInterval(() => {
         getDevices();
@@ -14,11 +16,15 @@ function startApp() {
     }, 300000);
     
     store.dispatch('settings/fetchSettings');
+    
+    if(localStorage?.isAuth){
+        store.dispatch('notifications/fetchNonSeenNotification');
+    }
+
     getDevices();
     getShops();
     getPrice();
     sendPushToken();
-    auth();
 }
 
 function getTargetStartPage(){
@@ -28,11 +34,11 @@ function getTargetStartPage(){
     // Check for maintenance exists
     target = settings.maintenance ?  'Maintenance' : target;
     // Check for Update exists
-    const platform = 'ios'; //cordova.device.platform;
-    const settingsVersion = platform == 'ios' ? settings?.appIosVersion?.version : settings?.appAndroidVersion?.version;
+    const platform = cordova.platformId;
+    const settingsVersion = platform == 'ios' ? settings?.appIosVersion : settings?.appAndroidVersion;
     if(settingsVersion){
-        const appCurrentVerion = '1.2.3';// 
-        target = appCurrentVerion < settingsVersion ?  'Update'  : target;
+        const appCurrentVerion = process.env.VUE_APP_CURRENT_VERSION;
+        target = appCurrentVerion < settingsVersion ?  'NewUpdate'  : target;
     }
     return target;
 }

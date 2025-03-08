@@ -8,6 +8,7 @@ import user from './modules/user/index';
 import menu from './modules/menu/index';
 import map from './modules/map/index';
 import settings from './modules/settings/index';
+import notifications from './modules/notifications/index';
 
 const store = createStore({
   modules: {
@@ -17,7 +18,8 @@ const store = createStore({
     user,
     menu,
     map,
-    settings
+    settings,
+    notifications
   },
 });
 

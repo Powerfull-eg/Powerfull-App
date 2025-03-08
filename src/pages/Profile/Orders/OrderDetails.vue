@@ -34,7 +34,7 @@
           <div class="order-image m-2"><img class="py-1" src="/assets/icons/direction.png" width="50" alt=""></div>
           <div class="data d-flex flex-column">
             <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ shop?.name }}</span>
-            <span class="content fs-6 mx-2"> {{ order.returnTime ? setTime(order.returnTime) : "Battery Not Returned" }}</span>
+            <span class="content fs-6 mx-2"> {{ order.returnTime ? setTime(order.returnTime) : t("Battery Not Returned") }}</span>
           </div>
         </div>
         <!--  -->
@@ -50,7 +50,7 @@
           <div class="order-image m-2"><img class="py-1" src="/assets/icons/wallet.png" width="50" alt=""></div>
           <div class="data d-flex flex-column">
             <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ t('Usage Fee') }}</span>
-            <span class="content fs-6 mx-2"> {{ order.amount !== "null" ? order.amount + ' ' + t("EGP") : t("Payment Not Completed")}}</span>
+            <span class="content fs-6 mx-2"> {{ order?.amount ? order.amount + ' ' + t("EGP") : t("Payment Not Completed")}}</span>
           </div>
         </div>
         <!--  -->
@@ -58,7 +58,7 @@
           <div class="order-image m-2"><img class="py-1" src="/assets/icons/cash.png" width="50" alt=""></div>
           <div class="data d-flex flex-column">
             <span class="title fs-6 text-dark font-weight-bold mx-2 my-1"> {{ t('Total Payment') }}</span>
-            <span class="content fs-6 mx-2"> {{ order.amount !== "null" ? order.amount + ' ' + t("EGP") : t("Payment Not Completed")}}</span>
+            <span class="content fs-6 mx-2"> {{ order?.amount ? order.amount + ' ' + t("EGP") : t("Payment Not Completed")}}</span>
           </div>
         </div>
       </div>
@@ -322,11 +322,10 @@ li.order-details-item:last-of-type {
 }
 
 .order-image {
-  padding: 15px;
+  padding: 10px;
   background: #fff;
   border: 2px solid #ddd;
   border-radius: 14px;
-  width: 10%;
 }
 
 .order-details,
@@ -334,6 +333,10 @@ li.order-details-item:last-of-type {
   background-color: var(--color);
   color: var(--background);
   box-shadow: #21252942 2px 6px 6px 3px;
+}
+
+.data {
+    align-self: center;
 }
 
 div.order-details {

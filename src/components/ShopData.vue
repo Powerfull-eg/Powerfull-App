@@ -76,7 +76,7 @@
             </div>
         </div>
         <!-- Body middle Part -->
-        <div class="body-middle d-flex justify-content-between w-100 p-3" style="height: 50px;">
+        <div class="body-middle d-flex justify-content-between w-100 p-3" style="height: 60px;">
             <!-- qr scan button -->
             <div @click="openScanner" class="qr-scan d-flex">
             <img src="assets/icons/qr-code.png" alt="distance">
@@ -508,7 +508,6 @@ export default {
     }
     .body-middle {
       font-size: .7rem !important;
-      max-height: 30px;
     }
     .qr-scan {
       background: var(--background);

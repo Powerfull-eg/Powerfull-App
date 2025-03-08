@@ -1,21 +1,23 @@
 <template>
   <base-layout hideHeader hideMenuBtn map loading="lazy">
     <div class="data">
-        <h1 class="title">{{ t(settings?.updateTitle) ?? t('New Update') }}</h1>
+        <h1 class="title">{{ updateTitle  }}</h1>
         <p class="message">
-            {{ t(settings?.updateMessage) ?? t('Update Message') }}
+            {{ updateMessage  }}
            </p>
-        <img src="/assets/images/Maintenance.svg" alt="Maintenance">
+        <img src="/assets/images/update.svg" alt="Update">
         <div class="routes">
-            <a class="btn btn-primary link" target="_blank" :href="appLink()">{{ t('Exit') }}</a>
-            <a v-if="settings?.man" href=""></a>
+            <a class="btn btn-primary link" target="_blank" :href="appLink()">{{ t('Update') }}</a>
+            <router-link style="color: #fff; text-decoration: none;" :to="{ name: userlogged ? 'home' : 'phone' }" v-if="!mandatory"> 
+                <span> {{ t('Skip') }} </span>
+            </router-link>
         </div>
     </div>
 </base-layout>
 </template>
 <script>
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import {useRouter} from 'vue-router';
 import { useStore } from 'vuex';
 export default {
@@ -24,15 +26,43 @@ name: 'NewUpdate',
 setup() {
     const router = useRouter();
     const { t } = useI18n();
-    const exitApp = () => { cordova.plugins.exit(); }
-    const platform = 'ios'; //cordova.device.platform;
+    const lang = localStorage?.locale;
+    const store = useStore();
+    const platform = cordova.platformId;
+    const settings = ref(store.getters["settings/settings"]);
+    const userlogged = localStorage?.isAuth == 1 ? true : false;
     const AndroidLink = settings.value?.appAndroidLink ?? process.env.VUE_APP_ANDROID_LINK;
     const IosLink = settings.value?.appIosLink ?? process.env.VUE_APP_IOS_LINK;
-    const appLink = () => { return platform == 'ios' ? AndroidLink : IosLink;  }
-    const store = useStore();
-    const settings = ref(store.getters["settings/settings"]);
+    const appLink = () => { return platform == 'android' ? AndroidLink : IosLink;  }
+    const appCurrentVerion = process.env.VUE_APP_CURRENT_VERSION;
+
+    // Define if update is mandatory
+    let mandatory = false;
+    mandatory = platform == 'android' ?  settings.value.updateAndroidMandatory > appCurrentVerion : settings.value.updateIosMandatory > appCurrentVerion;
+        
+    let updateTitle = lang == 'ar' ? settings.value?.arUpdateTitle : settings.value?.enUpdateTitle;
+    updateTitle = updateTitle ?? t('New Update');
+
+    let updateMessage = lang == 'ar' ? settings.value?.arUpdateMessage : settings.value?.enUpdateMessage;
+    updateMessage = updateMessage ?? t('Update Message');
     
-    return { t, exitApp,settings,router,appLink };
+    onMounted(() => {
+        preventBack();
+        console.log(mandatory);
+    });
+    
+    const exitApp = () => {
+        cordova.plugins.exit();
+    }
+
+    const preventBack = () => {
+      document.addEventListener("backbutton", (e) => {
+          e.preventDefault();
+          mandatory ? exitApp() : router.push({ name: 'home' });
+      }, false);
+    }
+    
+    return { t,settings,router,appLink,mandatory,updateTitle,updateMessage,userlogged };
 }
 }
 </script>
@@ -66,7 +96,7 @@ setup() {
 
 .data img {
     width: 50%;
-    margin: 2rem;
+    margin: 4rem;
 }
 
 .data .routes a.link {
