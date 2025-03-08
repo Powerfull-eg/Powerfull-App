@@ -39,8 +39,8 @@
     <div class="offcanvas-body small">
       <div v-if="cards.length > 0">
         <div v-for="card in cards" :key="card.id" @click="selectCard(card)" class="card-container row my-2">
-          <img src="/assets/icons/credit-card.png" width="15" class="img-fluid col-3" alt="">
-          <div class="info col-6 d-flex flex-column">
+          <img src="/assets/icons/credit-card.png" width="15" class="img-fluid col-4" alt="">
+          <div class="info col-8 d-flex flex-column">
             <span>{{ card.card_type }}</span>
             <span>{{ card.card_number }}</span>
           </div>
@@ -354,13 +354,13 @@ export default {
 }
 
 .scanCon::after {
-  width: 38px;
-  height: 28px;
+  width: 43px;
+  height: 42px;
   background-color: transparent;
   position: absolute;
   content: "";
   top: 12px;
-  left: -37px;
+  left: -29px;
   border-bottom-right-radius: 100%;
   z-index: 0;
   border-bottom: 13px solid var(--background);
@@ -368,13 +368,13 @@ export default {
 }
 
 .scanCon::before {
-  width: 38px;
-  height: 28px;
+  width: 43px;
+  height: 42px;
   background-color: transparent;
   position: absolute;
   content: "";
   top: 12px;
-  right: -37px;
+  right: -28px;
   border-bottom-left-radius: 100%;
   z-index: 0;
   border-bottom: 13px solid #f27920;

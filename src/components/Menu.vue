@@ -16,7 +16,7 @@
             <ion-item lines="none" detail="false" class="hydrated" router-direction="root"
               v-if="menuItem.type !== 2 && menuItem.type !== 'category'" @click="redirect(index, menuItem)"
               :class="{ selected: selectedIndex === index }">
-              <img width="30" class="p-2" :src="'assets/icons/' + menuItem.icon + '.png'">
+              <img width="30" class="me-1" :src="'assets/icons/' + menuItem.icon + '.png'">
               <ion-label style="font-weight: bold;    font-size: 1rem;
     padding: 0 5px;">{{ t(menuItem.title) }}</ion-label>
               <img width="30" class="p-2" v-if="menuItem.link" :src="'assets/icons/' + menuItem.icon + '.png'">

@@ -44,7 +44,7 @@ import {
 } from 'vue';
 import useToast from './composition/useToast';
 import Menu from './components/Menu.vue';
-import './composition/startApp';
+import { startApp, getTargetStartPage } from './composition/startApp';
 import { useRouter } from 'vue-router';
 import * as bootstrap from 'bootstrap';
 import { useI18n } from 'vue-i18n';
@@ -72,6 +72,7 @@ export default defineComponent({
       document.querySelector("body").style.fontFamily = "abdo-master ,bahij, serif";
     }
     onMounted(() => {
+      startApp();
       console.log(settings.value);
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasApp'));
       // for ios 
@@ -90,13 +91,11 @@ export default defineComponent({
             navigator.geolocation.getCurrentPosition((pos) => { localStorage.setItem('userLocation', JSON.stringify(pos)); }, (err) => { console.log(err); }, { enableHighAccuracy: true });
             // hide Loader
             hideLoader.value = true;
-            let target = localStorage?.oldGuest != true ? 'Intro' : localStorage.isAuth == true ? 'home' : 'phone';
-            target = settings.value.maintenance ?  'Maintenance' : target;
-            // console.log(target);
+            const target = getTargetStartPage();
             router.push({ name: target });
           } else {
-            modalData.value.header = 'No Internet Connection';
-            modalData.value.body = { img: '/assets/icons/fail.png', text: "You maybe doesn't have internet connection.\n Want to know our location ?", textStyle: 'danger' };
+            modalData.value.header = t('No Internet Connection');
+            modalData.value.body = { img: '/assets/icons/fail.png', text: t("Internet Error"), textStyle: 'danger' };
             offcanvas.show();
           }
         }, 3000);

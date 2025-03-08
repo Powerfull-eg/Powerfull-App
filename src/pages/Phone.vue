@@ -23,11 +23,6 @@
                 <div class="form-submit">
                   <button id="submit-phone" type="submit">{{t('Confirm')}}</button>
                 </div>
-                <!-- <div class="icons justify-content-center d-flex flex-row w-100">
-              <img src="assets/icons/facebook.png" alt="">
-              <img src="assets/icons/google.png" alt="">
-              <img src="assets/icons/twitter.png" alt="">
-            </div> -->
                 <div class="text-">
                   <router-link to="/guest" class="m-3 text-main-color text-decoration-none font-weight-bold">
                     {{ t("phone.Continue as guest") }} >
@@ -41,12 +36,12 @@
                 <div class="fs-3 my-2" style="color: var(--main-color-light);">+20{{ phone }}</div>
                 <a class="mb-3 text-start text-decoration-none mx-4" @click.prevent="otpSent = false; resetPassword = false;">{{ t('phone.Edit your number')}}</a>
                 <div class="otp-input">
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
-                  <ion-input type="number" inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="text" maxlength=1 inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="text" maxlength=1 inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="text" maxlength=1 inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
+                  <ion-input type="text" maxlength=1 inputmode="numeric" pattern="[0-9٠-٩]*" min="0" max="9" required></ion-input>
                 </div>
-                <div class="d-flex justify-content-between mx-3">
+                <div v-if=otpExpired class="d-flex justify-content-between mx-3">
                   <a class="text-primary text-decoration-none" @click.prevent="sendOtp()">{{ t('phone.Send Again')}}</a>
                   <span>{{ t("phone.didnt get code?") }}</span>
                 </div>
@@ -167,23 +162,47 @@ export default {
     const otpStatus = ref(0);
     const userExist = ref(false);
     const emailOtp = ref(false);
+    const otpExpired = ref(false);
     const resetPassword = ref(false);
     const userName = ref('!');
     const phone = ref('');
     const phonepattern = /^(10|11|12|15)\d{8}$/;
 
     onMounted(() => {
-      otpActivation();
+      checkOtpActivation();
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasPhone'));
-      prepareOtpInputs();
     });
+    
+    const checkOtpActivation = async () => {
+      const url = `${process.env.VUE_APP_API_URL}/api/check-otp-activation`;
+      await axios.get(url)
+      .then(res => { otpActive.value = res.data.otpActive;})
+      .catch(err => console.log(err))
+    }
 
     const prepareOtpInputs = () => {
+
       if (document.querySelector('form#otp') == null) {
         setTimeout(() => prepareOtpInputs(), 2000);
       }
       const inputs = document.querySelectorAll('form#otp .otp-input ion-input input');
       inputs.forEach((input, index) => {
+          // add pasted numbers
+          input.addEventListener('paste', (e) => {
+              e.preventDefault();
+              const pasted = e.clipboardData.getData('Text');
+              if (pasted.length > 1) {
+                  pasted.split('').forEach((char, i) => {
+                      if (i < inputs.length) {
+                          inputs[i].value = char;
+                      }
+                      if (i === inputs.length - 1) {
+                          input.disabled = true;
+                          setTimeout(() => verifyOtp(),1000);
+                      }
+                  });
+              }
+          })
           // Add some styles
           input.style.padding = "0px !important"; 
           // move to next input
@@ -214,7 +233,6 @@ export default {
                 }
             });
         });
-        console.warn('OTP Inputs ready');
     }
 
     const  otpActivation = async () => {
@@ -226,6 +244,8 @@ export default {
                   otpSent.value = true;
                   otpVerified.value = true;
                   otpActive.value = false;
+                } else {
+                  prepareOtpInputs();
                 }
                 userExist.value = res.data.UserExist;
                 userName.value  = res.data.UserExist ? res.data.name : '';
@@ -236,18 +256,18 @@ export default {
 
       // Prevent multiple clicks
       const submitBtn = document.querySelector('#submit-phone');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = t('Confirm');
-      }, 3000);
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = t('Confirm');
+        }, 3000);
+      }
 
       const form = document.querySelector('.form-container > form#phone-form');
       const formData = new FormData(form);
       phone.value = formData.get('phone').substring(1);
-
-      otpActivation();
       
       // check if input isn't empty
       if (phone.value === 0 || !phonepattern.test(phone.value)) {
@@ -258,8 +278,8 @@ export default {
         return;
       }
 
-      const url = `${process.env.VUE_APP_API_URL}/api/otp`;
       sendOtp();
+      otpActivation();
     };
     const sendOtp = () => {
       const inputs = document.querySelectorAll('form#otp .otp-input input');
@@ -276,7 +296,7 @@ export default {
           modalData.value.loader = true;
           offcanvas.show();
           setCounter();
-          setTimeout(() => { otpSent.value = true; offcanvas.hide(); prepareOtpInputs(); }, 2000);
+          setTimeout(() => { otpSent.value = true; offcanvas.hide();}, 2000);
         })
         .catch((err) => {
           modalData.value.loader = false;
@@ -511,12 +531,12 @@ export default {
     let countdown;
     const setCounter = () => {
       countdown != null ? clearInterval(countdown) : '';
-      const countdownDuration = 5 * 60 * 1000;
+      const countdownDuration =  60 * 1000;
       const startTime = new Date().getTime();
       countdown = setInterval(() => {
         const currentTime = new Date().getTime();
         const remainingTime = countdownDuration - (currentTime - startTime);
-
+        otpExpired.value = remainingTime <= 0;
         const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
@@ -635,7 +655,8 @@ export default {
       submitResetPassword,
       t,
       locale,
-      emailOtp
+      emailOtp,
+      otpExpired
     };
   },
 };

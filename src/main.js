@@ -45,6 +45,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 /* Bootstrap utilities */
 import './assets/css/bootstrap-grid.min.css';
 
+// primevue 
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+
 /* add icons to the library */
 library.add(faUserSecret);
 
@@ -124,6 +128,11 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(store)
+  app.use(PrimeVue, {
+    theme: {
+        preset: Aura
+    }
+  })
   .use(bootstrap);
 app.config.globalProperties.emitter = mitt();
 app.config.globalProperties.$validate = Utils.validations;
