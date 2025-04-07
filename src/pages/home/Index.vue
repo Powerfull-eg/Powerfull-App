@@ -1,8 +1,8 @@
 <template>
   <base-layout mapHeader  map>
-
-    <Map v-if="online" />
-    <Footer v-if="online" />
+  <Map v-if="online" />
+  <Footer v-if="online" />
+  <NotificationAlert />
   </base-layout>
 </template>
 
@@ -16,6 +16,7 @@ import {
 import Map from '../../components/Map.vue';
 import Footer from '../../components/Footer.vue';
 import Loading from '../../components/Loading.vue';
+import NotificationAlert from '../../components/NotificationAlert.vue';
 import useToast from '../../composition/useToast';
 import '../../composition/notification';
 import { useI18n } from 'vue-i18n';
@@ -25,6 +26,7 @@ export default {
     Map,
     Footer,
     Loading,
+    NotificationAlert
   },
   setup() {
     const devices = localStorage.getItem('devices');

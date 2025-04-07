@@ -22,7 +22,7 @@
                         <span :class="'title fs-4 fw-bold text-truncate'">{{ notification?.title }}</span>
                         <span :class="'body fs-5 text-truncate'">{{ notification?.body }}</span>
                     </div>
-                    <div class="notification-image"><img :src="notification?.image ?? '/assets/images/powericon.png'" width="100" height="100" alt=""></div>
+                    <div v-if="notification?.image" class="notification-image"><img :src="notification?.image ?? '/assets/images/powericon.png'" width="100" height="100" alt=""></div>
                 </div>
 
                 <!-- Collapsed Content -->
@@ -31,7 +31,7 @@
                     <span class="title fw-bold text-dark">{{ notification?.title }}</span>
                     <span class="body text-dark">{{ notification?.body }}</span>
                   </div>
-                  <div class="notification-image p-2 text-center"><img :src="notification?.image ?? '/assets/images/powericon.png'" width="250" alt=""></div>
+                  <div v-if="notification?.image" class="notification-image p-2 text-center"><img :src="notification?.image ?? '/assets/images/powericon.png'" width="250" alt=""></div>
                   <router-link :to="{ name: notification?.data?.page ?? 'home'}" class="btn btn-warning mx-auto d-block w-50 text-center" style="background-color: var(--background);"> {{ notification?.data?.btnTextAr || notification?.data?.btnTextAr ? (lang == 'ar' && notification?.data?.btnTextAr ? notification?.data?.btnTextAr : notification?.data?.btnTextEn) : t('Get It Now')  }}
                   </router-link>
                 </div>

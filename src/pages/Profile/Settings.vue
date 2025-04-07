@@ -2,19 +2,19 @@
   <base-layout :pageTitle="t('Settings')" :show-menu-button="false" loading="lazy">
     <div class="page-container d-flex flex-column justify-content-center align-items-center w-100">
       <div class="link welcome" :style="lang === 'ar' ? 'direction:rtl' : 'direction:ltr' "> {{ t('Hello') }} {{ userName }} &#128075</div>
-      <router-link class="link d-flex justify-content-between" to="/profile"><span> <img src="/assets/icons/user.png"
+      <router-link class="link d-flex justify-content-between" to="/profile"><span class="text-truncate"> <img src="/assets/icons/user.png"
             width="30" alt="" style="margin-right: 10px;"> {{t('settings.Profile')}} </span><ion-icon style="vertical-align: middle;"
           :icon="icons.chevronForwardOutline"></ion-icon></router-link>
-      <router-link class="link d-flex justify-content-between" to="/gifts"><span> <img src="/assets/icons/gift.png"
+      <router-link class="link d-flex justify-content-between" to="/gifts"><span class="text-truncate"> <img src="/assets/icons/gift.png"
             width="30" alt="" style="margin-right: 10px;"> {{t('settings.Gifts')}} </span><ion-icon style="vertical-align: middle;"
           :icon="icons.chevronForwardOutline"></ion-icon></router-link>
-      <router-link class="link d-flex justify-content-between" to="/about"><span> <img src="/assets/icons/file.png" width="30" alt="" style="margin-right: 10px;"> {{t('About')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></router-link>
-      <router-link class="link d-flex justify-content-between" to="/language"><span> <img src="/assets/icons/language.png" width="30" alt="" style="margin-right: 10px;"> {{t('settings.Language')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></router-link>
-      <router-link class="link d-flex justify-content-between" to="/terms-conditions"><span> <img
+      <router-link class="link d-flex justify-content-between" to="/about"><span class="text-truncate"> <img src="/assets/icons/file.png" width="30" alt="" style="margin-right: 10px;"> {{t('About')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></router-link>
+      <router-link class="link d-flex justify-content-between" to="/language"><span class="text-truncate"> <img src="/assets/icons/language.png" width="30" alt="" style="margin-right: 10px;"> {{t('settings.Language')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></router-link>
+      <router-link class="link d-flex justify-content-between" to="/terms-conditions"><span class="text-truncate"> <img
             src="/assets/icons/file-2.png" width="30" alt="" style="margin-right: 10px;"> {{t('settings.Terms and Conditions')}}
         </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></router-link>
-      <a class="link d-flex justify-content-between" @click.prevent="deleteAccount"><span> <img src="/assets/icons/trash.png" width="30" alt="" style="margin-right: 10px;"> {{t('settings.Delete Account')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></a>
-      <router-link class="link d-flex justify-content-between" to="/logout"><span> <img src="/assets/icons/exit.png"
+      <a class="link d-flex justify-content-between" @click.prevent="deleteAccount"><span class="text-truncate"> <img src="/assets/icons/trash.png" width="30" alt="" style="margin-right: 10px;"> {{t('settings.Delete Account')}} </span><ion-icon style="vertical-align: middle;" :icon="icons.chevronForwardOutline"></ion-icon></a>
+      <router-link class="link d-flex justify-content-between" to="/logout"><span class="text-truncate"> <img src="/assets/icons/exit.png"
             width="30" alt="" style="margin-right: 10px;"> {{t('settings.Sign Out')}} </span><ion-icon style="vertical-align: middle;"
           :icon="icons.chevronForwardOutline"></ion-icon></router-link>
     </div>

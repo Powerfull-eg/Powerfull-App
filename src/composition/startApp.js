@@ -5,6 +5,7 @@ import getDevices from "./devices";
 import auth from "./auth";
 import sendPushToken from "./registerPushToken";
 import store from '../store';
+import axios from "axios";
 
 auth();
 
@@ -25,6 +26,7 @@ function startApp() {
     getShops();
     getPrice();
     sendPushToken();
+    checkExpiredOrUsedVouchers();
 }
 
 function getTargetStartPage(){
@@ -41,6 +43,23 @@ function getTargetStartPage(){
         target = appCurrentVerion < settingsVersion ?  'NewUpdate'  : target;
     }
     return target;
+}
+
+// Check for expired or used vouchers
+async function checkExpiredOrUsedVouchers() {
+    const voucher = JSON.parse(localStorage?.selectedVoucher ?? null) ?? null;
+    if(voucher && localStorage?.isAuth){
+        axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
+        const url = `${process.env.VUE_APP_API_URL}/api/operations/vouchers/${voucher.id}`;
+        await axios.get(url)
+        .then(res => {
+            if( (new Date) > new Date(res.data.voucher.to) || res.data.voucher.used == 1 ) {
+                localStorage.selectedVoucher = null;
+            }
+        }).catch(err => {console.log(err); localStorage.selectedVoucher = null});
+        return;
+    }
+    localStorage.selectedVoucher = null;
 }
 
 export { startApp, getTargetStartPage };

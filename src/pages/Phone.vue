@@ -19,7 +19,7 @@
                 <span class=" my-2 text-main-color font-weight-bold">{{ t('phone.Enter your phone number')}}</span>
                 <ion-input inputmode="numeric" pattern="[0-9٠-٩]*" name="phone" required v-model="emailphone" autocomplete label-placement="floating"
                   type="number" :placeholder="t('phone.Phone Number')"></ion-input>
-
+                  <!-- <Oauth v-if="settings.oauth.active && settings.oauth.platforms.length > 0" /> -->
                 <div class="form-submit">
                   <button id="submit-phone" type="submit">{{t('Confirm')}}</button>
                 </div>
@@ -66,7 +66,7 @@
                 </div>
               </div>
             </form>
-            <form id="new-user" v-else-if="otpSent && otpVerified && !userExist && !resetPassword" class="w-75"
+            <form id="new-user" :style="`direction: ${locale == 'ar' ? 'rtl' : 'ltr'}`" v-else-if="otpSent && otpVerified && !userExist && !resetPassword" class="w-75"
               @submit.prevent="register()">
               <div class="form-inputs d-flex flex-column">
                 <br>
@@ -78,15 +78,15 @@
                     type="text" :placeholder="t('profile.Last Name')"></ion-input>
                 </div>
 
-                <ion-input name="email" v-model="email" required autocomplete label-placement="floating" type="text"
-                  :placeholder="t('profile.Email')"></ion-input>
+                <ion-input name="email" v-model="email" autocomplete label-placement="floating" type="text"
+                  :placeholder="`${t('profile.Email')} (${t('Optional')})`"></ion-input>
 
-                <div class="row">
+                <!-- <div class="row">
                   <ion-input class="col me-3" name="password" required v-model="password" autocomplete
                     label-placement="floating" type="Password" :placeholder="t('profile.Password')"></ion-input>
                   <ion-input class="col" name="confirm" required v-model="confirm" autocomplete label-placement="floating"
                     type="Password" :placeholder="t('profile.Confirm Password')"></ion-input>
-                </div>
+                </div> -->
                 <div class="row my-3">
                   <div class="form-check form-switch">
                     <input required class="form-check-input" type="checkbox" role="switch" id="terms" name="terms" v-model="terms">
@@ -143,16 +143,16 @@ import { ionInput, IonIcon } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
-import { logoGoogle, logoFacebook, logoTwitter } from 'ionicons/icons';
 import { useI18n } from 'vue-i18n';
 import NewUser from '../components/phone/NewUser.vue';
+import Oauth from '../components/phone/Oauth.vue';
+import { useStore } from 'vuex';
 
 export default {
   name: 'Phone',
-  components: { ionInput, IonIcon, NewUser },
+  components: { ionInput, IonIcon, NewUser, Oauth },
   setup() {
     const { t } = useI18n();
-    const Icons = { logoGoogle, logoFacebook, logoTwitter };
     const modalData = ref({ body: { img: '', text: '', textStyle: '' } });
     const router = useRouter();
     let offcanvas;
@@ -167,6 +167,8 @@ export default {
     const userName = ref('!');
     const phone = ref('');
     const phonepattern = /^(10|11|12|15)\d{8}$/;
+    const store = useStore();
+    const settings = ref(store.getters["settings/settings"]);
 
     onMounted(() => {
       checkOtpActivation();
@@ -411,9 +413,9 @@ export default {
 
       const passwordPattern = /^.{8,}$/;
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const requiredValues = ['fname', 'lname', 'email', 'phone', 'password', 'confirm'];
+      const requiredValues = ['fname', 'lname', 'phone'];
       const data = {};
-      const inputs = ['fname', 'lname', 'email', 'phone', 'password', 'confirm'];
+      const inputs = ['fname', 'lname', 'email', 'phone'];
       const errMessages = [];
 
       const formData = new FormData(document.querySelector('form#new-user'));
@@ -435,13 +437,13 @@ export default {
       }
 
       // Validate password
-      if (!passwordPattern.test(data.password)) {
-        errMessages.push(t('validation.The Minimum length of password should be 8 characters'));
-      }
+      // if (!passwordPattern.test(data.password)) {
+      //   errMessages.push(t('validation.The Minimum length of password should be 8 characters'));
+      // }
 
-      if (data.password !== data.confirm) {
-        errMessages.push(t('validation.the password and confirm password not identical'));
-      }
+      // if (data.password !== data.confirm) {
+      //   errMessages.push(t('validation.the password and confirm password not identical'));
+      // }
 
       if (data.email && !errMessages.length) {
         // Check Email
@@ -637,7 +639,6 @@ export default {
 
     const locale = localStorage.locale;
     return {
-      Icons,
       modalData,
       submitPhone,
       sendOtp,
@@ -656,7 +657,8 @@ export default {
       t,
       locale,
       emailOtp,
-      otpExpired
+      otpExpired,
+      settings
     };
   },
 };

@@ -47,8 +47,10 @@
         </div>
       </div>
       <div v-else class="alert alert-danger text-center fs-5">{{t("There arent any added cards")}}</div>
-      <router-link :to="{ name: 'Wallet' }"> {{t("Add another payment")}} <ion-icon
-          :icon="icons.addCircleOutline"></ion-icon></router-link>
+        <div class="d-flex justify-content-between">
+          <router-link style="font-size: 1rem; display:flex; align-items: center; gap: 3px;" :to="{ name: 'Wallet' }"> {{t("Add another payment")}} <ion-icon :icon="icons.addCircleOutline"></ion-icon></router-link>
+          <router-link style="font-size: 1rem; display:flex; align-items: center; gap: 3px;"  :to="{ name: 'Vouchers' }"> {{t("vouchers.Add Voucher")}} <img width="20" src="/assets/icons/add-voucher.png" alt=""></router-link>
+        </div>
     </div>
   </div>
   <!-- Modal -->
@@ -262,7 +264,8 @@ export default {
           const url = `${process.env.VUE_APP_API_URL}/api/operations/rent`;
           const qrcodeUrl = new URL(success.text).search;
           const device = new URLSearchParams(qrcodeUrl)?.get('device');
-
+          const voucher = JSON.parse(localStorage?.selectedVoucher ?? null)?.id ?? null;
+          
           if (!validateURL(success.text)) {
             showCanvas(false, "The qr code isn't valid url \n please contact our support.");
           } else if (!device) {
@@ -271,7 +274,7 @@ export default {
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
 
             // send request to rent device
-            axios.post(url, { device, userId: userData.id, card: selectedCard.value, voucher: localStorage.selectedVoucher })
+            axios.post(url, { device, userId: userData.id, card: selectedCard.value, voucher: voucher })
               // If request sent response is 200
               .then((response) => {
                 console.log(response);

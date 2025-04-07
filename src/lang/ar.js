@@ -30,6 +30,7 @@ export default {
     "Welcome!": "!مرحبا",
     "Loading": "تحميل",
     "No Orders Available": "لا يوجد أي طلبات",
+    "Optional": "اختياري",
     "Free":"مجانا",
     "New":"جديد",
     "Used":"مستخدم",
@@ -112,6 +113,7 @@ export default {
     "New Update": "!تحديث جديد",
     "Update Message":"لقد أجرينا بعض التحسينات الرائعة لتعزيز تجربتك. قم بالتحديث الآن للاستمتاع بأحدث الميزات وتحسينات الأداء!",
     "Notifications":"الإشعارات",
+    "Notifications Alert Message":"يبدو ان الاشعارات غير مفعلة.\n يرجى تفعيلها من إعدادات الجهاز للحصول على الاشعارات.",
     "No Notifications Available": "لا يوجد اشعارات متاحة",
     "Not Available": "غير متوفر",
     "Not Defined": "غير محدد",
@@ -166,7 +168,7 @@ export default {
         "Forget Password ?":"نسيت كلمة السر ؟",
         "Edit your number":"تعديل الرقم", 
         "Enter your Password to login":"أدخل كلمة السر لتسجيل الدخول",
-        "Complete Your Account":"أكمل ببيانات حسابك",
+        "Complete Your Account":"أكمل بيانات حسابك",
         "Enter your new Password":"أدخل كلمة السر الجديدة",
         "Resend OTP in":"اعادة الإرسال",
         "The otp has been expired":"انتهت صلاحية الرقم السري المؤقت",
@@ -215,6 +217,15 @@ export default {
     "shop-removed-from-saved": "تمت إزالة المتجر من المحفوظات",
     "cant-save-shop": "لا يمكن حفظ المتجر",
     "cant-remove-shop-from-saved": "لا يمكن إزالة المتجر من المحفوظات",
-   } 
-    
+   },
+   "vouchers" : {
+    "Add Voucher":"أضف كود خصم",
+    "Add New Voucher Code": "أضف كود خصم جديد",
+    "Apply Voucher": "تطبيق الخصم",
+    "Voucher Input Placholder": "مثال : RNsdWZ",
+    "Voucher activated successfully": "تم تفعيل الكود بنجاح",
+    "Voucher already used": "الكود مستخدم بالفعل",
+    "Voucher expired": "انتهت صلاحية الكود",
+    "Voucher not found": "الكود غير موجود"
+    }
 }

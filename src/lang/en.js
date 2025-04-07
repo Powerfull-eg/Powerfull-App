@@ -30,6 +30,7 @@ export default {
     "Welcome!": "Welcome!",
     "Loading": "Loading",
     "No Orders Available": "No Orders Available",
+    "Optional": "Optional",
     "Free": "Free",
     "New": "New",
     "Used": "Used",
@@ -111,6 +112,7 @@ export default {
     "New Update": "New Update",
     "Update Message":"We've made some exciting improvements to enhance your experience. Update now to enjoy the latest features and performance upgrades!",
     "Notifications":"Notifications",
+    "Notifications Alert Message":"It seems that notifications are not enabled.\n Please enable them from your device settings to receive notifications.",
     "No Notifications Available":"No Notifications Available",
     "Not Available": "Not Available",
     "Not Defined": "Not Defined",
@@ -213,5 +215,15 @@ export default {
         "shop-removed-from-saved": "Shop Removed From Saved",
         "cant-save-shop": "Can't Save Shop",
         "cant-remove-shop-from-saved": "Can't Remove Shop From Saved",
+    },
+    "vouchers" : {
+        "Add Voucher":"Add Voucher",
+        "Add New Voucher Code": "Add New Voucher Code",
+        "Apply Voucher": "Apply Voucher",
+        "Voucher Input Placholder": "ex: RNsdWZ",
+        "Voucher activated successfully": "Voucher activated successfully",
+        "Voucher already used": "Voucher already used",
+        "Voucher expired": "Voucher expired",
+        "Voucher not found": "Voucher not found"
     }
 }

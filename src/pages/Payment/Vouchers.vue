@@ -6,20 +6,40 @@
         <h3 target="used" @click="selectType" style="font-size: 1.2rem;">{{t('Used')}}</h3>
         <h3 target="expired" @click="selectType" style="font-size: 1.2rem;">{{t('Expired')}}</h3>
     </div>
+    <!-- NEW -->
     <div class="coupons" data-type="new" style=" display: block;">
-        <div v-if="allVouchers?.new.length > 0"  v-for="newVoucher in allVouchers.new" :key="newVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
-            <div :data-id="newVoucher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
-                <ion-icon style="font-size: 3rem; flex-grow: 0.5; padding: 5px;" src="assets/icons/ticket-outline.svg"></ion-icon>
-                <div  class="couponContent flex-grow-1 d-flex flex-column">
-                    <h3>{{ newVoucher.value + (newVoucher.type === 1 ? " "+t("LE") : "%") }} {{t('Discount')}}</h3>
-                    <p style="margin: 0;">{{t('Minimum Amount')}}: <span class="fw-bold">{{newVoucher.min_amount}}</span></p>
-                    <p>{{t('Expires at')}} <span class="fw-bold">{{(new Date(newVoucher.to).toLocaleDateString())}}</span></p>
-                </div>
-                <img @click="selectVoucher($event)" src="assets/icons/circleEmpty.png" style="align-self: center;" width="50" height="50" alt="">
+        <!-- voucher input -->
+        <div class="my-4">
+            <h3 :class="`d-block fs-5 fw-bold ${lang == 'ar' ? 'text-end' : 'text-start'}`">{{t('vouchers.Add New Voucher Code')}}</h3>
+            <div :class="`d-flex flex-column align-items-center justify-content-center ${lang == 'ar' ? 'text-end flex-row-reverse' : 'text-start'}`">
+                <input :class="`m-2 py-1 w-50 bg-white text-dark ${lang == 'ar' ? 'text-end' : 'text-start'}`" :style="`border:0; direction: ${lang == 'ar' ? ' rtl;' : 'ltr;'}`" v-model="voucherCode" :placeholder="t('vouchers.Voucher Input Placholder')" type="text" />
+                <button class="btn py-1 bg-white text-dark" @click="addVoucher()">{{t('vouchers.Apply Voucher')}}</button>
             </div>
         </div>
-        <div v-else><img src="/assets/icons/no-voucher.png" width="200" class="d-block mx-auto my-5" alt=""></div>
+        <!-- Added Vouchers -->
+        <Transition name="fade">
+            <div v-if="selectedVocuher" :key="selectedVocuher.id" class="box coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
+                <div :data-id="selectedVocuher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
+                    <ion-icon style="font-size: 3rem; flex-grow: 0.5; padding: 5px;" src="assets/icons/ticket-outline.svg"></ion-icon>
+                    <div  class="couponContent flex-grow-1 d-flex flex-column">
+                        <h3>{{ selectedVocuher.value + (selectedVocuher.type === 1 ? " "+t("LE") : "%") }} {{t('Discount')}}</h3>
+                        <p style="margin: 0;">{{t('Minimum Amount')}}: <span class="fw-bold">{{selectedVocuher.min_amount}}</span></p>
+                        <p>{{t('Expires at')}} <span class="fw-bold">{{(new Date(selectedVocuher.to).toLocaleDateString())}}</span></p>
+                    </div>
+                    <button class="btn btn-danger" style="height: fit-content;" @click="removeSelectedVoucher()">x</button>
+                </div>
+            </div>
+        </Transition>
+        <Transition name="fade">
+            <div v-if="addMessage" class="box d-flex gap-1 justify-content-center align-items-center">
+                <span class="text fs-3">{{addMessage.message}}</span>
+                <img :src="`/assets/icons/${addMessage.status === 'success' ? 'success' : 'cancel'}.png`" width="50">
+            </div>
+        </Transition>
+        
+        <div v-if="!selectedVocuher"><img src="/assets/icons/no-voucher.png" width="200" class="d-block mx-auto my-5" alt=""></div>
     </div>
+    <!-- USED -->
     <div class="coupons" data-type="used" style="display: none;">
         <div v-if="allVouchers?.used.length > 0" v-for="usedVoucher in allVouchers.used" :key="usedVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
             <div :data-id="usedVoucher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
@@ -33,6 +53,7 @@
         </div>
         <div v-else><img src="/assets/icons/no-voucher.png" width="200" class="d-block mx-auto my-5" alt=""></div>
     </div>
+    <!-- Expired -->
     <div class="coupons" data-type="expired" style=" display: none;">
         <div v-if="allVouchers?.expired.length > 0" v-for="expiredVoucher in allVouchers.expired" :key="expiredVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
             <div :data-id="expiredVoucher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
@@ -52,16 +73,24 @@
 
 <script>
 import axios from 'axios';
-import { ref, watchEffect } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 export default {
     name: "Vouchers",
     setup(){
         const { t } = useI18n();
         const allVouchers = ref(null);
-        const selectedVocuher = ref(null);
-        localStorage.selectedVoucher = JSON.stringify(selectedVocuher.value);
+        const selectedVocuher = ref(JSON.parse(localStorage.selectedVoucher ?? null) ?? null);
+        const addMessage = ref(null);
+        const voucherCode = ref('');
+        const lang = localStorage.locale;
         
+        // Check if selected voucher is expired
+        if(selectedVocuher.value && (new Date) > new Date(selectedVocuher.value.to)){
+            selectedVocuher.value = null;
+            localStorage.selectedVoucher = null;
+        }
+
         // Get All vouchers
         const getVocuher = async () => {
                     axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
@@ -73,24 +102,49 @@ export default {
                     .catch(err => console.log(err))
                     
                 }
-        watchEffect(getVocuher(),{deep:true});
-
+                onMounted(() => {
+                    getVocuher();
+                    checkExpiredOrUsedVouchers();
+                });
+        const  checkExpiredOrUsedVouchers = async () => {
+            const voucher = JSON.parse(localStorage?.selectedVoucher ?? null) ?? null;
+            if(voucher){
+                axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
+                const url = `${process.env.VUE_APP_API_URL}/api/operations/vouchers/${voucher.id}`;
+                await axios.get(url)
+                .then(res => {
+                    if( (new Date) > new Date(res.data.voucher.to) || res.data.voucher.used == 1 ) {
+                        localStorage.selectedVoucher = null;
+                    }
+                }).catch(err => {console.log(err); localStorage.selectedVoucher = null});
+                return;
+            }
+            localStorage.selectedVoucher = null;
+        }
         // Select specific voucher
-        const selectVoucher = (e) => {
-            const icon = e.target;
-            // clear all filled
-            document.querySelectorAll("[src='assets/icons/checkedCircle.png']").forEach(ele => {
-                ele.setAttribute("src",`assets/icons/${ele === icon ? "checkedCircle" : "circleEmpty"}.png`);
-            });
-
-            if(icon.getAttribute("src") === "assets/icons/circleEmpty.png"){
-                icon.setAttribute("src","assets/icons/checkedCircle.png");
-                selectedVocuher.value = parseInt(e.target.parentElement.getAttribute("data-id"));
-            }else{
-                icon.setAttribute("src","assets/icons/circleEmpty.png");
+        const addVoucher = () => {
+            if(allVouchers.value.new.length > 0) {
+                if(allVouchers.value.new.find(voucher => voucher.code === voucherCode.value)){
+                    selectedVocuher.value = allVouchers.value.new.find(voucher => voucher.code === voucherCode.value);
+                    addMessage.value = {'status': 'success', 'message': t('vouchers.Voucher activated successfully')};
+                }else if(allVouchers.value.used.find(voucher => voucher.code === voucherCode.value)){
+                    addMessage.value = {'status': 'error', 'message': t('vouchers.Voucher already used')};
+                    selectedVocuher.value = null;
+                } else if(allVouchers.value.expired.find(voucher => voucher.code === voucherCode.value)){
+                    addMessage.value = {'status': 'error', 'message': t('vouchers.Voucher expired')};
+                    selectedVocuher.value = null;
+                } else {
+                    addMessage.value = {'status': 'error', 'message': t('vouchers.Voucher not found')};
+                    selectedVocuher.value = null;
+                }
+            } else {
+                addMessage.value = {'status': 'error', 'message': t('vouchers.Voucher not found')};
                 selectedVocuher.value = null;
             }
-            return localStorage.selectedVoucher = JSON.stringify(selectedVocuher.value);
+            localStorage.selectedVoucher = JSON.stringify(selectedVocuher.value);
+            voucherCode.value = '';
+            setTimeout(() => { addMessage.value = null; }, 3000);
+            return;
         };
 
         const selectType = (e) => {
@@ -109,9 +163,12 @@ export default {
                 return type.style.display = "none";
             });
         };
-
-
-        return { allVouchers, selectVoucher, selectType, t }
+        const removeSelectedVoucher = () => {
+            selectedVocuher.value = null; 
+            addMessage.value = null;
+            localStorage.selectedVoucher = null;   
+        }
+        return { allVouchers, addVoucher, selectType, t , voucherCode, selectedVocuher, addMessage, lang, removeSelectedVoucher}
     }
 }
 </script>
@@ -246,5 +303,18 @@ div[data-type] {
     background: var(--color);
     color: var(--background);
     transition: .2s .2s ease-in;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.box {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
 }
 </style>
