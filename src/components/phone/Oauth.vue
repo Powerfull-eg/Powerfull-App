@@ -1,9 +1,4 @@
 <template>
-    <!-- Loader -->
-    <div v-if="loader" class="loader">
-        <div class="spinner-border" role="status"></div>
-        <span class="text-center d-block my-3">{{ t('Loading') }}...</span>
-    </div>
     <!-- Or -->
     <div class="or">
         <span class="line"></span>
@@ -20,7 +15,7 @@
 
     <!-- Alerts -->
         <!-- Request Phone Alert -->
-        <ion-alert
+        <ion-alert :is-open="showRequestPhoneAlert"
             trigger="present-alert"
             :header="alertHeader"
             :buttons="alertButtons"
@@ -30,13 +25,12 @@
 
 <script>
 import { logoGoogle, logoFacebook, logoTwitter  } from 'ionicons/icons';
-import { IonIcon } from '@ionic/vue';
 import {useI18n} from 'vue-i18n';
 import { ref } from 'vue';
 import axios from 'axios';
 import useToast from '../../composition/useToast';
 import { useStore } from 'vuex';
-import { IonAlert } from '@ionic/vue';
+import { IonIcon, IonAlert, loadingController } from '@ionic/vue';
 
 export default {
     name: "Oauth",
@@ -47,20 +41,20 @@ export default {
 
     setup() {
         const { t } = useI18n();
-        const loader = ref(false);
+        const loaderDone = ref(false);
         const { openToast } = useToast();
         const store = useStore();
         const settings = ref(store.getters["settings/settings"]);
         const token = ref(null);
-        const platform = ref(null);
+        const selectedPlatform = ref(null);
         const phone = ref(null);
         const otp = ref(null);
         const showRequestPhoneAlert = ref(false);
-        const showOtpAlert = ref(false);
         const alertHeader = ref('');
         const alertButtons = ref([]);
         const alertInputs = ref([]);
-
+        const userEmail = ref(null);
+        
         const Icons = {
             logoGoogle,
             logoFacebook,
@@ -68,8 +62,8 @@ export default {
         };
 
         const oauthLogin = (platform) => {
-            loader.value = true;
-            platform.value = platform;
+            showLoader();
+            selectedPlatform.value = platform;
             const link = `${process.env.VUE_APP_API_URL}/auth/oauth/redirect?platform=${platform}`;
             window.open(link, `oauth:${platform}`, 'location=no');
 
@@ -79,34 +73,35 @@ export default {
                     const data = JSON.parse(event.data.substring(7));
                     token.value = data?.token ?? null;
                     requestPhone = data?.requestPhone == 'true' ? true : false;
-                    alert(requestPhone);
-                    return;
+                    userEmail.value = data?.email ?? null;
+                    showLoader();
                 }
                 if(requestPhone) {
-                    requestPhone();
-                    return;
+                    requestPhoneNumber();
+                } else {
+                    handleCallback(selectedPlatform.value,token.value);  
                 }
-                handleCallback(platform.value,token.value);
             });
 
-            loader.value = false;
         }
 
-        const requestPhone = async () => {
-            alertHeader.value = t('Please enter your phone number');
+        const requestPhoneNumber = async () => {
+            alertHeader.value = t('phone.Phone Number');
             alertButtons.value = [ {
                 text: t('Cancel'),
                 role: 'cancel',
                 handler: () => {
+                    showRequestPhoneAlert.value = false;
                     console.log('Notification alert canceled');
                 },
             },
             {
                 text: t('Submit'),
                 role: 'confirm',
-                handler: () => {
-                    phone.value = document.querySelector("input[name='phone']").value;
-                    alert(phone.value);
+                handler: (data) => {
+                    phone.value = data.phone;
+                    showRequestPhoneAlert.value = false;
+                    showLoader();
                     sendOtp(phone.value);
                 },
             }];
@@ -114,7 +109,7 @@ export default {
                 {
                     name: 'phone',
                     type: 'number',
-                    placeholder: t('Enter your phone number'),
+                    placeholder: t('phone.Enter your phone number'),
                     value: '',
                     attributes: {
                         maxlength: 11,
@@ -123,32 +118,35 @@ export default {
                 }
             ]
             showRequestPhoneAlert.value = true;
-            showOtpAlert.value = false; 
         };
 
         const sendOtp = async (phone) => {
             const url = `${process.env.VUE_APP_API_URL}/api/otp`;
+            phone = phone.startsWith('0') ? phone.substring(1) : phone;
             await axios.post(url, { phone })
             .then((res) => {
                 console.log(res);
-                alertHeader.value = t('Please enter the code sent to your phone');
+                alertHeader.value = t('phone.OTP');
+                // Reinit alert
+                showLoader();
+                setTimeout(() => showRequestPhoneAlert.value = true, 100);
+                openToast(t('phone.Please enter the code that has been sent to this number'), 'warning', 'bottom');
+            }).catch((err) => {
                 showRequestPhoneAlert.value = false;
-                showOtpAlert.value = true;
-                openToast(t('Please enter the code sent to your phone'), 'warning', 'bottom');
+                openToast(t('phone.Failed to login please use another way'), 'danger', 'bottom');
             });
             alertButtons.value = [ {
                 text: t('Cancel'),
                 role: 'cancel',
-                handler: () => {
-                    
-                }
+                handler: () => { showRequestPhoneAlert.value = false; }
             }, 
             {
                 text: t('Submit'),
                 role: 'confirm',
-                handler: () => {
-                    otp.value = document.querySelector("input[name='otp']").value;
-                    alert(otp.value);
+                handler: (data) => {
+                    otp.value = data.otp;
+                    showLoader();
+                    showRequestPhoneAlert.value = false;
                     updateUserData();
                 }
             }
@@ -158,21 +156,23 @@ export default {
                 {
                     name: 'otp',
                     type: 'number',
-                    placeholder: t('Please enter the code that has been sent to this number'),
+                    placeholder: t('phone.OTP'),
                     value: '',
                 }
             ]
         }
-
+        
         const updateUserData = async () => {
             axios.defaults.headers.common.Authorization = `Bearer ${token.value}`;
-            const url = `${process.env.VUE_APP_API_URL}/api/oauth/update-user`;
-            await axios.post(url, { otp: otp.value, phone: phone.value })
+            const url = `${process.env.VUE_APP_API_URL}/api/operations/update-phone`;
+            await axios.post(url, { otp: otp.value, phone: phone.value, email: userEmail.value })
             .then((res) => {
                 token.value = res.data.token;
-                handleCallback(platform.value,token.value);
+                showLoader();
+                handleCallback(selectedPlatform.value,token.value);
             }).catch((err) => console.log(err));
         }
+
 
         const handleCallback = (platform,token) => {
             switch (platform) {
@@ -220,15 +220,22 @@ export default {
             return activePlatforms.includes(platform);
         }
 
+        const showLoader = async () => {
+            const loading = await loadingController.create({
+                message:t('Loading') + ' ...',
+                duration: 3000
+            });
+
+            await loading.present();
+            loaderDone.value = true;
+        }
         return {
             Icons,
             oauthLogin,
             checkPlatformActive,
             t,
-            loader,
             phone,
             showRequestPhoneAlert,
-            showOtpAlert,
             alertButtons,
             alertInputs
         };

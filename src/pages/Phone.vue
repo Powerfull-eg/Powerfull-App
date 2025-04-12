@@ -19,7 +19,7 @@
                 <span class=" my-2 text-main-color font-weight-bold">{{ t('phone.Enter your phone number')}}</span>
                 <ion-input inputmode="numeric" pattern="[0-9٠-٩]*" name="phone" required v-model="emailphone" autocomplete label-placement="floating"
                   type="number" :placeholder="t('phone.Phone Number')"></ion-input>
-                  <!-- <Oauth v-if="settings.oauth.active && settings.oauth.platforms.length > 0" /> -->
+                  <Oauth v-if="settings.oauth.active && settings.oauth.platforms.length > 0" />
                 <div class="form-submit">
                   <button id="submit-phone" type="submit">{{t('Confirm')}}</button>
                 </div>
