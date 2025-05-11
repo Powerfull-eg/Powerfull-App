@@ -4,5 +4,10 @@
     "capacitor": {}
   },
   "type": "vue",
-  "id": "xxx"
+  "id": "xxx",
+  "plugins": {
+    "Keyboard": {
+      "resize": "none"
+    }
+  }
 }

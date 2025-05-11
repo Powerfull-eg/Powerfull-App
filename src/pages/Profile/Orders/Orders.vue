@@ -12,15 +12,15 @@
       </div>
     </div>
     <div v-else class="orders-container w-100 row my-2">
-      <div class="calender w-100 text-center mx-auto my-5" @click="datepicker">
-        <input id="calender" type="text" name="calender" :value="t('Date')" readonly />
+      <div class="calender w-100 text-center mx-auto my-5" @click="openDatepicker">
+        <input id="calender" type="text" ref="datepickerInput" name="calender" :value="t('Date')" readonly />
       </div>
       <div v-if="orders.length == 0" class="no-content text-center">
         <img width="50" src="/assets/icons/no-content.png" alt="No Content">
         <h4 style="font-weight: 600; margin: 20px;"> {{ t('No Orders Available') }}</h4>
       </div>
       <div v-else class="d-flex flex-column justify-content-center align-items-center">
-
+        <Paginator :template="{default: 'PrevPageLink PageLinks NextPageLink'}" :rows="rows" @page="changePage" :totalRecords="totalRecords"></Paginator>
         <div class="order my-3" v-for="order in orders" :key="order.id"
           :data-month="(new Date(new Date(order.borrowTime) - timezoneDiff)).getMonth() + 1">
           <router-link class="w-100 d-flex flex-row" :to="{ name: 'Order', params: { id: order.id } }">
@@ -52,26 +52,39 @@ import {
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { addCircleOutline, chevronForwardOutline } from 'ionicons/icons';
-import { IonIcon } from '@ionic/vue';
+import { IonIcon, IonDatetime } from '@ionic/vue';
 import AirDatepicker from 'air-datepicker';
 import useToast from '../../../composition/useToast';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
+import localeAr from 'air-datepicker/locale/ar';
 import { useI18n } from 'vue-i18n';
+import Paginator from 'primevue/paginator';
+import { nextTick } from 'vue';
 
 export default {
   name: 'Tickets',
   components: {
     IonIcon,
+    IonDatetime,
+    Paginator
   },
   setup() {
+    const pageNum = ref(1);
     const { t } = useI18n();
     const router = useRouter();
     const timezoneDiff = 1000 * 60 * 60 * 6;
     const { openToast } = useToast();
+    const datepickerInput = ref(null);
+    let datepickerInstance = null;
     const loader = ref(true);
-    const allOrders = ref([]);
     const orders = ref([]);
+    const totalRecords = ref(0);
+    const rowsLimit = ref(5);
+    const rows = ref(5);
+    const firstPaginator = ref(0);
+    const startDate = ref(null);
+    const endDate = ref(null);
     const icons = { addCircleOutline, chevronForwardOutline };
     const error = ref(false);
     const result = ref({});
@@ -88,16 +101,16 @@ export default {
       openToast(t('You are offline please reconnect and try again'), 'danger', 'bottom');
       return router.go(-1);
     }
-
-    const getOrders = async () => {
+    
+    const getOrders = async (startdate = null, enddate = null) => {
       axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
       const url = `${process.env.VUE_APP_API_URL}/api/operations/orders`;
-      await axios.post(url)
+      await axios.post(url, {page : pageNum.value,lang: localStorage.locale ,startdate, enddate,limit: 5})
         .then((res) => {
-          console.log(res);
-          allOrders.value = res.data.orders;
-          orders.value = allOrders.value;
-          console.log(orders.value);
+          orders.value = res.data.orders;
+          totalRecords.value = res.data.count;
+          rowsLimit.value = res.data.limit ?? rowsLimit.value;
+
           setTimeout(() => { loader.value = false; }, 2000);
         })
         .catch((err) => {
@@ -110,14 +123,13 @@ export default {
           error.value = true;
           setTimeout(() => { loader.value = false; }, 2000);
         });
+        setTimeout(() => { intiDatePicker(); }, 2000);
     };
 
-    watchEffect(getOrders());
-
-    onUpdated(() => {
-      setTimeout(() => { loader.value = false; }, 3000);
+    onUpdated(async () => {
+      loader.value = true;
       error.value = false;
-      orders.value = allOrders.value;
+      await getOrders(startDate.value, endDate.value);
     });
 
     function shopData(deviceID) {
@@ -138,32 +150,45 @@ export default {
       return shop ?? null;
     }
 
-    const filterOrdersByMonth = (orders, month) => {
-      const filteredOrders = [];
-      console.log(orders);
-      orders.map((order) => {
-        if (((new Date(new Date(order.borrowTime) - timezoneDiff)).getMonth() + 1) == month) { filteredOrders.push(order); }
-      });
-      return filteredOrders;
-    };
+    const changePage = (event) =>  {
+      console.log(event);
+      pageNum.value = event.page + 1;
+      firstPaginator.value = +event.first;
+      rows.value = +event.rows
+      getOrders(startDate.value, endDate.value);
+      console.log(totalRecords.value);
+    }
 
-    const datepicker = () => {
-      // eslint-disable-next-line no-new
-      new AirDatepicker('#calender', {
-        view: 'months',
-        minView: 'months',
-        dateFormat: 'MM yyyy',
-        autoClose: true,
-        locale: localeEn,
-        position: 'bottom center',
-        onSelect: ({ date }) => {
-          console.log(filterOrdersByMonth(allOrders.value, (new Date(date)).getMonth() + 1));
-          orders.value = filterOrdersByMonth(allOrders.value, (new Date(date)).getMonth() + 1);
-        },
-      });
+    const intiDatePicker = () => {
+      if (datepickerInput.value && !datepickerInstance) {
+        datepickerInstance = new AirDatepicker(datepickerInput.value, {
+          view: 'months',
+          minView: 'months',
+          dateFormat: 'MM yyyy',
+          autoClose: true,
+          locale: localStorage.locale == 'ar' ? localeAr : localeEn,
+          range: true,
+          position: 'bottom center',
+          isMobile: true,
+          maxDate: new Date(),
+          multipleDates: true,
+          onSelect: ({ date }) => {
+            pageNum.value = 1;
+            date = date.map(d => (new Date(d)).getTime());
+            date = date.sort();
+            startDate.value = date[0];
+            endDate.value = date.length > 1 ? (date[date.length - 1]) : date[0];
+            getOrders(startDate.value, endDate.value);
+          },
+        });
+      }
+    }
+    const openDatepicker = async () => {
+      await nextTick();
+      if (datepickerInstance) {
+        datepickerInstance?.show();
+      }
     };
-    datepicker();
-
     return {
       loader,
       orders,
@@ -171,10 +196,17 @@ export default {
       error,
       result,
       status,
-      datepicker,
+      openDatepicker,
+      datepickerInput,
       shopData,
       timezoneDiff,
-      t
+      t,
+      pageNum,
+      changePage,
+      rowsLimit,
+      firstPaginator,
+      rows,
+      totalRecords
     };
   },
 };
@@ -264,7 +296,7 @@ span.status {
   width: 60%;
 }
 
-input#calender {
+input[name='calender'] {
   width: 80%;
   padding: 15px;
   border-radius: 40px;

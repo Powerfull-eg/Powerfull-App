@@ -79,6 +79,8 @@ export default {
     "Are you want to delete this payment method ?":"هل تريد حذف طريقة الدفع ؟",
     "Card deleted successfully":"تم حذف البطاقة بنجاح",
     "Cant delete card Please try again later or contact support team":"لا يمكن حذف الطاقة برجاء التواصل مع فريق الدعم",
+    "cvv": "CVV",
+    "Enter CVV Number": "ادخل رقم CVV",
     "Coupons" :"القسائم",
     "LE":"جنية",
     "Discount":"خصم",

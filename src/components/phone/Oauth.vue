@@ -222,7 +222,7 @@ export default {
 
         const showLoader = async () => {
             const loading = await loadingController.create({
-                message:t('Loading') + ' ...',
+                message: t('Loading') + ' ...',
                 duration: 3000
             });
 

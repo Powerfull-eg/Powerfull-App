@@ -62,10 +62,12 @@ export default {
 
     async function initMap() {
       const { Map } = await google.maps.importLibrary('maps');
-
+      await google.maps.importLibrary('marker');
+      await google.maps.importLibrary("core")
+      const latlng =  new google.maps.LatLng((settings.value.map.lat || 30.033333), (settings.value.map.lng || 31.233334));
       map = new Map(document.getElementById('map'), {
-        center: { lat: (settings.value.map.lat || 30.033333), lng: (settings.value.map.lng || 31.233334) },
-        zoom: (settings.value.map.zoom || 8),
+        center: latlng,
+        zoom: (parseInt(settings.value.map.zoom) || 8),
         mapId: (settings.value.map.mapId || 'a55a8dd1e435899e'),
         disableDefaultUI: true,
         terms: false,
@@ -74,12 +76,17 @@ export default {
 
       const shops = JSON.parse(localStorage.shops) || await getShops();
       // Marker Set
-      const image = '/assets/icon/pin.svg';
+
       let marker;
       shops.forEach((shop) => {
+        const image = document.createElement('img');
+        image.src = '/assets/icon/pin.svg';
+        image.style.width = '50px';
+        image.style.height = '50px';
         let shopLocation = shop?.data?.location ? shop?.data?.location.split(',') : shop?.location?.split(',');
-        marker = new google.maps.Marker(
-          { position: { lat: parseFloat(shopLocation[0]), lng: parseFloat(shopLocation[1]) }, map, icon: image },
+        const latlng =  new google.maps.LatLng(parseFloat(shopLocation[0]), parseFloat(shopLocation[1]));
+        marker = new google.maps.marker.AdvancedMarkerElement(
+          { position: latlng, map, content: image },
         );
         google.maps.event.addListener(marker, 'click', () => {
           const offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasMap'));
@@ -112,16 +119,12 @@ export default {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-
-                    map.setCenter(pos);
-                    new google.maps.Marker({
-                        position: pos,
+                  const latlng =  {lat: position.coords.latitude, lng: position.coords.longitude};
+                    console.log(latlng,possition)
+                    map.setCenter(latlng);
+                    new google.maps.marker.AdvancedMarkerElement({
+                        position: latlng,
                         map: map,
-                        // title: "You are here",
                     });
                 },
                 () => {

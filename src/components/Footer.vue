@@ -30,29 +30,7 @@
       </div>
     </div>
   </div>
-  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasCard" aria-labelledby="offcanvasBottomLabel">
-    <div class="offcanvas-header fs-3">
-      <h5 class="offcanvas-title" id="offcanvasBottomLabel">{{t("Payment")}}</h5>
-      <button type="button" class="btn-close" @click.prevent="offcanvasCard.hide()" data-bs-dismiss="offcanvas"
-        aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body small">
-      <div v-if="cards.length > 0">
-        <div v-for="card in cards" :key="card.id" @click="selectCard(card)" class="card-container row my-2">
-          <img src="/assets/icons/credit-card.png" width="15" class="img-fluid col-4" alt="">
-          <div class="info col-8 d-flex flex-column">
-            <span>{{ card.card_type }}</span>
-            <span>{{ card.card_number }}</span>
-          </div>
-        </div>
-      </div>
-      <div v-else class="alert alert-danger text-center fs-5">{{t("There arent any added cards")}}</div>
-        <div class="d-flex justify-content-between">
-          <router-link style="font-size: 1rem; display:flex; align-items: center; gap: 3px;" :to="{ name: 'Wallet' }"> {{t("Add another payment")}} <ion-icon :icon="icons.addCircleOutline"></ion-icon></router-link>
-          <router-link style="font-size: 1rem; display:flex; align-items: center; gap: 3px;"  :to="{ name: 'Vouchers' }"> {{t("vouchers.Add Voucher")}} <img width="20" src="/assets/icons/add-voucher.png" alt=""></router-link>
-        </div>
-    </div>
-  </div>
+  <CardsComponent :action="scan"/>
   <!-- Modal -->
   <div class="modal fade text-dark" id="giftModal" tabindex="-1" aria-labelledby="giftModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -80,16 +58,18 @@ import {
   filterSharp,
   appsSharp,
   addCircleOutline,
+  refreshOutline
 } from 'ionicons/icons';
-import { IonFooter, IonToolbar, IonIcon } from '@ionic/vue';
+
+import { IonFooter, IonToolbar, IonIcon, IonAlert, IonSpinner, loadingController } from '@ionic/vue';
 import {
   ref, onMounted, onUpdated, watchEffect,
 } from 'vue';
 import axios from 'axios';
 import * as bootstrap from 'bootstrap';
 import { useRouter } from 'vue-router';
-import useToast from '../composition/useToast';
 import { tsParticles } from './../assets/tsParticles-confetti';
+import CardsComponent from '../components/footer/CardsComponent.vue';
 import { useI18n } from 'vue-i18n';
 import particlesOptions from "./../assets/particlesOptions";
 const curved = document.querySelector('.scanBtn');
@@ -100,23 +80,25 @@ export default {
     IonFooter,
     IonToolbar,
     IonIcon,
+    IonAlert,
+    IonSpinner,
+    CardsComponent
   },
   setup() {
     const { t } = useI18n();
     const footerList = ref([]);
     const auth = localStorage.isAuth == true;
     const userData = localStorage.userData ? JSON.parse(localStorage.userData) : '';
-    const icons = ref({
-      qrCodeSharp, addCircleOutline, personCircleSharp, qrCodeSharp, filterSharp, appsSharp,
-    });
+    const icons = {
+      qrCodeSharp, addCircleOutline, personCircleSharp, qrCodeSharp, filterSharp, appsSharp,refreshOutline
+    };
     const online = localStorage.connection == true;
     const canvasData = ref({ header: '', body: {} });
     const modal = ref({ title: "", message: "", gift: "" });
     const router = useRouter();
-    const { openToast } = useToast();
     const offcanvasCard = ref(null);
     const selectedCard = ref({});
-    const cards = ref({});
+    const loaderDone = ref(false);
     let offcanvas;
     const bsModal = ref(null);
     onMounted(() => {
@@ -135,7 +117,6 @@ export default {
       offcanvas = new bootstrap.Offcanvas(document.querySelector('#offcanvasScan'));
       offcanvasCard.value = new bootstrap.Offcanvas(document.querySelector('#offcanvasCard'));
       bsModal.value = new bootstrap.Modal(document.querySelector('#giftModal'), { backdrop: false, keyboard: false });
-      setInterval( () => { getCards(); }, 5000 );
     });
     // Scan Functions
     // Validate the scanning result url
@@ -174,65 +155,10 @@ export default {
       showCanvas(false, 'No Intenet ,You are not online \n Please connect to newtwork and try again later');
       setTimeout(() => { offcanvas.hide(); router.push({ name: 'home' }); }, 5000);
     }
-    // get user previous orders
-    const getOrders = async () => {
-      let orders = null;
-      axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
-      const url = `${process.env.VUE_APP_API_URL}/api/operations/orders`;
-      await axios.post(url)
-        .then((res) => {
-          console.log(res);
-          orders = res.data.orders;
-        })
-        .catch((err) => {
-          console.log(err);
-          orders = null;
-        });
-      return orders;
-    };
-    // get user current cards
-    const getCards = async () => {
-      axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
-      const url = `${process.env.VUE_APP_API_URL}/api/operations/get-cards`;
-      await axios.get(url)
-        .then((res) => {
-          cards.value = res.data.cards;
-          // Update user cards
-          const data = JSON.parse(localStorage.userData);
-          data.cards = cards.value;
-          localStorage.userData = JSON.stringify(data);
-        })
-        .catch((err) => console.log(err));
 
-      return cards;
-    };
-    watchEffect(getCards);
     
     // make user chppse bretween current cards
-    const selectCard = async (card) => {
-      const orders = await getOrders();
-      // Check if there are cards exist
 
-      console.log(cards);
-      if (cards.value.length <= 0) {
-        setTimeout(() => {
-          openToast("You doesn't have any added card", 'danger', 'bottom');
-        }, 500);
-      } else if (orders != null) {
-        // check in completed orders
-        if (orders.length > 0) {
-          let inCompletedOrders = 0;
-          orders.map((order) => { order.status != 3 ? inCompletedOrders++ : ''; });
-          if (inCompletedOrders > 0) {
-            openToast("You Can't place new order unless complete the previous one", 'danger', 'bottom');
-            return;
-          }
-        }
-        selectedCard.value = card;
-        offcanvasCard.value.hide();
-        scan();
-      } else if (orders == null) { openToast('Please Check your internet connection and try again', 'danger', 'bottom'); }
-    };
     const checkGifts = (gift) => {
       if (gift === null) return;
       modal.value = gift;
@@ -241,8 +167,10 @@ export default {
       const particles = tsParticles.load(particlesOptions);
       setTimeout(() => { particles.then(data => data.destroy()) }, 3000);
     };
+
     // scan the qr code
-    const scan = async () => {
+    const scan = async (card,cvv=null) => {
+      showLoader();
       // Firing the plugin
       cordova.plugins.mlkit.barcodeScanner.scan(
         // Scan options
@@ -274,7 +202,7 @@ export default {
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
 
             // send request to rent device
-            axios.post(url, { device, userId: userData.id, card: selectedCard.value, voucher: voucher })
+            axios.post(url, { device, userId: userData.id, card: selectedCard.value, voucher: voucher, cvv: cvv })
               // If request sent response is 200
               .then((response) => {
                 console.log(response);
@@ -319,20 +247,31 @@ export default {
         },
       );
     };
+
     const locale = localStorage.locale;
+
+    const showLoader = async () => {
+        const loading = await loadingController.create({
+            message: t('Loading') + ' ...',
+            duration: 3000
+        });
+
+        await loading.present();
+        loaderDone.value = true;
+    }
+
     return {
       footerList,
       icons,
       canvasData,
-      openToast,
       userData,
-      selectCard,
       offcanvasCard,
-      cards,
       modal,
       bsModal,
       locale,
-      t
+      t,
+      loaderDone,
+      scan
     };
   },
 };
@@ -475,7 +414,7 @@ div.icon-container h6 {
   text-decoration: unset;
   text-align: center;
   display: block;
-  margin: 20px;
+  margin: 5px;
   font-size: 20px;
 }
 

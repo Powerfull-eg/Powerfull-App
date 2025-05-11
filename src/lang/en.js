@@ -79,6 +79,8 @@ export default {
     "Are you want to delete this payment method ?": "Do you want to delete this payment method?",
     "Card deleted successfully": "Card deleted successfully",
     "Cant delete card Please try again later or contact support team": "Can't delete card. Please try again later or contact support team",
+    "cvv": "CVV",
+    "Enter CVV Number" : "Enter CVV Number",
     "Coupons": "Coupons",
     "LE": "Egyptian Pound",
     "Discount": "Discount",
