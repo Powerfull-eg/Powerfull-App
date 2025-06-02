@@ -202,7 +202,7 @@ export default {
             axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
 
             // send request to rent device
-            axios.post(url, { device, userId: userData.id, card: selectedCard.value, voucher: voucher, cvv: cvv })
+            axios.post(url, { device, userId: userData.id, card: card, voucher: voucher, cvv: cvv })
               // If request sent response is 200
               .then((response) => {
                 console.log(response);

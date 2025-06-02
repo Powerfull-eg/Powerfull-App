@@ -41,7 +41,7 @@
     </div>
     <!-- USED -->
     <div class="coupons" data-type="used" style="display: none;">
-        <div v-if="allVouchers?.used.length > 0" v-for="usedVoucher in allVouchers.used" :key="usedVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
+        <div v-if="allVouchers?.used?.length > 0" v-for="usedVoucher in allVouchers.used" :key="usedVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
             <div :data-id="usedVoucher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
                 <ion-icon style="font-size: 3rem; flex-grow: 0.5; padding: 5px;" src="assets/icons/ticket-outline.svg"></ion-icon>
                 <div  class="couponContent flex-grow-1 d-flex flex-column">
@@ -55,7 +55,7 @@
     </div>
     <!-- Expired -->
     <div class="coupons" data-type="expired" style=" display: none;">
-        <div v-if="allVouchers?.expired.length > 0" v-for="expiredVoucher in allVouchers.expired" :key="expiredVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
+        <div v-if="allVouchers?.expired?.length > 0" v-for="expiredVoucher in allVouchers.expired" :key="expiredVoucher.id" class="coupon my-2 py-2 d-flex flex-column align-items-center justify-content-center">
             <div :data-id="expiredVoucher.id" style="overflow: hidden;box-shadow: rgb(0, 0, 0) 6px 5px 20px;background: linear-gradient(90deg, rgba(242,121,32,1) 57%, rgba(251,180,108,1) 84%);" class="couponCon w-75 d-flex flex-row justify-content-center text-white bg-transparent rounded-4 p-2">
                 <ion-icon style="font-size: 3rem; flex-grow: 0.5; padding: 5px;" src="assets/icons/ticket-outline.svg"></ion-icon>
                 <div  class="couponContent flex-grow-1 d-flex flex-column">
@@ -123,7 +123,7 @@ export default {
         }
         // Select specific voucher
         const addVoucher = () => {
-            if(allVouchers.value.new.length > 0) {
+            if(allVouchers.value.new?.length > 0) {
                 if(allVouchers.value.new.find(voucher => voucher.code === voucherCode.value)){
                     selectedVocuher.value = allVouchers.value.new.find(voucher => voucher.code === voucherCode.value);
                     addMessage.value = {'status': 'success', 'message': t('vouchers.Voucher activated successfully')};

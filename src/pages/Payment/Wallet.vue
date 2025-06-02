@@ -152,32 +152,6 @@ export default {
         .catch((err) => console.log(err));
     };
 
-    // const paymentCompletion = () => {
-    //   axios.defaults.headers.common.Authorization = `Bearer ${JSON.parse(localStorage.token).token}`;
-    //   const url = `${process.env.VUE_APP_API_URL}/api/operations/payment-complete`;
-    //   const completeInterval = setInterval(async () => {
-    //     await axios.get(url, {})
-    //       .then((res) => { console.log(res); /* clearInterval(completeInterval) */ })
-    //       .catch((err) => console.log(err));
-    //   }, 1000);
-    // };
-
-    // function replaceWithStars(text) {
-    //   let counter = 0;
-    //   const chunkSize = 4;
-    //   const replacedText = [];
-    //   text.split('').forEach((e) => {
-    //     if (counter <= text.length - Math.floor(text.length / chunkSize) - 1) {
-    //       replacedText.push('*');
-    //     } else {
-    //       replacedText.push(e);
-    //     }
-    //     counter++;
-    //   });
-    //   return replacedText.map((element, index) => (index % chunkSize === chunkSize - 1 ? `${element} ` : element))
-    //     .join('');
-    // }
-
     const openCanvas = (card_id) => {
       cardId.value = card_id;
       modalData.value = { loader: false, body: { img: '/assets/icons/delete-card.png', text: t('Are you want to delete this payment method ?'), textStyle: 'danger' } };

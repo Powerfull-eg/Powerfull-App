@@ -98,11 +98,13 @@ export default {
             {
                 text: t('Submit'),
                 role: 'confirm',
-                handler: (data) => {
+                handler: async (data) => {
                     phone.value = data.phone;
                     showRequestPhoneAlert.value = false;
                     showLoader();
-                    sendOtp(phone.value);
+                    const phoneExist = await checkPhoneExist(phone.value);
+                    phoneExist ? requestPhoneNumber() : sendOtp(phone.value);
+                    
                 },
             }];
             alertInputs.value = [
@@ -161,7 +163,24 @@ export default {
                 }
             ]
         }
-        
+        const checkPhoneExist = async (phone) => {
+            const url = `${process.env.VUE_APP_API_URL}/api/checkphone`;
+            phone = phone.startsWith('0') ? phone.substring(1) : phone;
+            let exists = true;
+            await axios.post(url, { phone })
+            .then((res) => {
+                console.log(res);
+                exists = res.data == 1 ? true : false;
+                if (exists) {
+                    openToast(t('phone.Phone number already exists'), 'danger', 'bottom');
+                }
+            }).catch((err) => {
+                openToast(t('phone.failed to send otp please check your number and try again'), 'danger', 'bottom');
+            });
+
+            return exists;
+        }
+
         const updateUserData = async () => {
             axios.defaults.headers.common.Authorization = `Bearer ${token.value}`;
             const url = `${process.env.VUE_APP_API_URL}/api/operations/update-phone`;

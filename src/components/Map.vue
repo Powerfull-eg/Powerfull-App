@@ -101,7 +101,7 @@ export default {
               modalData.value.online = target.statusCode == 0;
               if(target?.data?.cabinet?.slots){
                 modalData.value.slots = {
-                  totalSlots: target.data.cabinet.slots, busySlots: target.data.cabinet.busySlots, emptySlots: target.data.cabinet.emptySlots, batteries: target.data.batteries,
+                  totalSlots: target.data.cabinet.slots ?? 6, busySlots: target.data.cabinet.busySlots, emptySlots: target.data.cabinet.emptySlots, batteries: target.data.batteries,
                 };
               }
             }

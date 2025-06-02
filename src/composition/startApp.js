@@ -36,7 +36,7 @@ function getTargetStartPage(){
     // Check for maintenance exists
     target = settings.maintenance ?  'Maintenance' : target;
     // Check for Update exists
-    const platform = 'ios' //cordova.platformId;
+    const platform = cordova.platformId;
     const settingsVersion = platform == 'ios' ? settings?.appIosVersion : settings?.appAndroidVersion;
     if(settingsVersion){
         const appCurrentVerion = process.env.VUE_APP_CURRENT_VERSION;

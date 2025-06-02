@@ -182,7 +182,8 @@ export default {
         "Registration Succeeded": "Registration Succeeded",
         "Account registered successfully Youll be redirected to home page": "Account registered successfully. You'll be redirected to the home page",
         "Cant register account beacuase ,please try again": "Can't register account. Please try again",
-        "Your Password has been reset successfully": "Your password has been reset successfully"
+        "Your Password has been reset successfully": "Your password has been reset successfully",
+        "Phone number already exists": "Phone number already exists",
     },
     "guest" : {
         "When you continue as a guest:":"When you continue as a guest:",

@@ -184,7 +184,8 @@ export default {
         "Registration Succeeded":"تم تسجيل الدخول بنجاح",
         "Account registered successfully Youll be redirected to home page":"تم التسجيل بنجاح و سيتم تحويلك للصفحة الرئيسية",
         "Cant register account beacuase ,please try again":"لا يمكن التسجيل برجاء إعادة المحاولة",
-        "Your Password has been reset successfully":"تم إعادة تعيين كلمة السر بنجاح"
+        "Your Password has been reset successfully":"تم إعادة تعيين كلمة السر بنجاح",
+        "Phone number already exists": "رقم التليفون موجود بالفعل",
     },
     "guest":{
         "When you continue as a guest:": "عندما تستمر كضيف:",

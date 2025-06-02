@@ -20,7 +20,7 @@
         <h4 style="font-weight: 600; margin: 20px;"> {{ t('No Orders Available') }}</h4>
       </div>
       <div v-else class="d-flex flex-column justify-content-center align-items-center">
-        <Paginator :template="{default: 'PrevPageLink PageLinks NextPageLink'}" :rows="rows" @page="changePage" :totalRecords="totalRecords"></Paginator>
+        <Paginator class="custom-paginator" :template="{default: 'PrevPageLink PageLinks NextPageLink'}" :rows="rows" @page="changePage" :totalRecords="totalRecords"></Paginator>
         <div class="order my-3" v-for="order in orders" :key="order.id"
           :data-month="(new Date(new Date(order.borrowTime) - timezoneDiff)).getMonth() + 1">
           <router-link class="w-100 d-flex flex-row" :to="{ name: 'Order', params: { id: order.id } }">
@@ -306,5 +306,16 @@ input[name='calender'] {
   caret-color: transparent;
   background-color: inherit;
   border: 2px solid var(--color);
+}
+
+.custom-paginator {
+  --p-paginator-background: #fff;
+  --p-paginator-color: #000;
+  --p-paginator-border-radius: 20px;
+}
+
+.custom-paginator :deep(.p-paginator-page.p-paginator-page-selected) {
+    background: var(--background);
+    color: #fff;
 }
 </style>

@@ -2,7 +2,7 @@
   <base-layout mapHeader  map>
   <Map v-if="online" />
   <Footer v-if="online" />
-  <!-- <NotificationAlert /> -->
+  <NotificationAlert />
   </base-layout>
 </template>
 

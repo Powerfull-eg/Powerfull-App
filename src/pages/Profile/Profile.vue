@@ -96,8 +96,8 @@ export default {
         errMessages.push(t('validation.Email is not correct')); 
       } else if (data.password && !passwordPattern.test(data.password)) {
          errMessages.push(t("validation.password cant be less than 8 characters")); 
-      } else if (data.phone && !phonepattern.test(data.phone)) { 
-          errMessages.push(t('validation.Phone is not correct')); 
+      } else if (data.phone && !phonepattern.test(data.phone) || !data.phone.length) {
+          errMessages.push(t('validation.Phone is not correct'));
       } else if (!data.phone && !data.email) {
           errMessages.push(t('validation.You should fill at least one of email and phone')); 
       }

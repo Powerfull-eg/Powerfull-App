@@ -5,7 +5,7 @@
         <p class="message">
             {{ settings?.maintenanceMessage ?? t('App is not available at the moment') }}
            </p>
-        <img src="/assets/images/Maintenance.svg" alt="Maintenance">
+        <img src="/assets/images/Maintenance.png" alt="Maintenance">
         <button class="btn btn-primary" @click="exitApp()">{{ t('Exit') }}</button>
     </div>
 </base-layout>

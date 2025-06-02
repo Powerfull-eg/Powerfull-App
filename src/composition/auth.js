@@ -3,7 +3,17 @@ import axios from "axios";
 export default function auth() {
     const userData = localStorage.token ? JSON.parse(localStorage.token) : {};
     const errMessages = [];
+    const redirectNonAuth = () => { 
+        errMessages.push("Your aren't logged in!");
+        userData.auth = 0;
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
+        localStorage.isAuth = "0"
 
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    };
     function authUser() {
         axios.defaults.headers.common['Authorization'] = `Bearer ${userData?.token}`;
         const url = `${process.env.VUE_APP_API_URL}/api/auth/authUser`;
@@ -14,6 +24,8 @@ export default function auth() {
             })
             .catch((err) => {
                 console.log(err);
+                redirectNonAuth();
+                return;
             });
     }
     // authUser
@@ -22,15 +34,7 @@ export default function auth() {
     userData.auth = 1;
     authUser();
     if (!userData && !userData.token) {
-        errMessages.push("Your aren't logged in!");
-        userData.auth = 0;
-        localStorage.removeItem("token");
-        localStorage.removeItem("userData");
-        localStorage.isAuth = "0"
-
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 1000);
+        redirectNonAuth();
     }
 
     errMessages ?? localStorage.setItem("userAuthError", errMessages[0]);

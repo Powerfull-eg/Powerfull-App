@@ -170,7 +170,8 @@ export default {
                 }
             }
             selectedCard.value = card;
-            setAlertOpen(true);
+            // setAlertOpen(true);
+            cvvSubmitHandler();
         } else if (orders == null) { openToast('Please Check your internet connection and try again', 'danger', 'bottom'); }
         };
 

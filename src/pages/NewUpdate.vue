@@ -5,7 +5,7 @@
         <p class="message">
             {{ updateMessage  }}
            </p>
-        <img src="/assets/images/update.svg" alt="Update">
+        <img src="/assets/images/update.png" alt="Update">
         <div class="routes">
             <a class="btn btn-primary link" target="_blank" :href="appLink()">{{ t('Update') }}</a>
             <router-link style="color: #fff; text-decoration: none;" :to="{ name: userlogged ? 'home' : 'phone' }" v-if="!mandatory"> 
